@@ -1,0 +1,13 @@
+// 1. Your overrides for every Bootstrap Sass variable (see comments inside).
+@import "variables";
+@import "variables-dark";
+
+// 2. The entire Bootstrap framework, built on top of the overrides above.
+//    Every class Bootstrap ships (grid, buttons, cards, navbar, forms,
+//    alerts, utilities, ...) is included and already reflects your design
+//    system — nothing further to configure.
+@import "bootstrap/scss/bootstrap";
+
+// 3. Project-specific styling goes here, AFTER Bootstrap, using Bootstrap's
+//    own mixins/functions so it stays in sync with the same variables.
+@import "custom";

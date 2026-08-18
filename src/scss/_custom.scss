@@ -1,0 +1,12 @@
+// Project-level styling that isn't a Bootstrap class override.
+// This project intentionally sticks to Bootstrap's own generated classes in
+// the HTML, so the only thing added here is more of Bootstrap's own utility
+// system: one `.font-{key}` class per entry in $font-families
+// (_variables.scss), e.g. .font-instrument-sans, .font-instrument-serif,
+// .font-manrope, .font-gloock — built the same way Bootstrap builds its own
+// .text-*, .bg-*, .fs-* utilities.
+@each $name, $family in $font-families {
+  .font-#{$name} {
+    font-family: $family !important;
+  }
+}

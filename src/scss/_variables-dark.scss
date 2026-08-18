@@ -1,0 +1,67 @@
+// =============================================================================
+// DESIGN SYSTEM OVERRIDES ([data-bs-theme="dark"])
+// -----------------------------------------------------------------------------
+// Bootstrap's dark color mode (enabled via $enable-dark-mode in _variables.scss)
+// reads a second, parallel set of `-dark` suffixed Sass variables to generate
+// the CSS custom properties used under [data-bs-theme="dark"]. Overriding them
+// here keeps light and dark mode both driven entirely by variables — toggle
+// dark mode on any element with `data-bs-theme="dark"` (or on <html> for the
+// whole page) and no component class needs to change.
+// =============================================================================
+
+$primary-text-emphasis-dark:   tint-color($primary, 40%);
+$secondary-text-emphasis-dark: tint-color($secondary, 40%);
+$success-text-emphasis-dark:   tint-color($success, 40%);
+$info-text-emphasis-dark:      tint-color($info, 40%);
+$warning-text-emphasis-dark:   tint-color($warning, 40%);
+$danger-text-emphasis-dark:    tint-color($danger, 40%);
+$light-text-emphasis-dark:     $gray-100;
+$dark-text-emphasis-dark:      $gray-300;
+
+$primary-bg-subtle-dark:   shade-color($primary, 80%);
+$secondary-bg-subtle-dark: shade-color($secondary, 80%);
+$success-bg-subtle-dark:   shade-color($success, 80%);
+$info-bg-subtle-dark:      shade-color($info, 80%);
+$warning-bg-subtle-dark:   shade-color($warning, 80%);
+$danger-bg-subtle-dark:    shade-color($danger, 80%);
+$light-bg-subtle-dark:     $gray-800;
+$dark-bg-subtle-dark:      mix($gray-800, $black);
+
+$primary-border-subtle-dark:   shade-color($primary, 40%);
+$secondary-border-subtle-dark: shade-color($secondary, 40%);
+$success-border-subtle-dark:   shade-color($success, 40%);
+$info-border-subtle-dark:      shade-color($info, 40%);
+$warning-border-subtle-dark:   shade-color($warning, 40%);
+$danger-border-subtle-dark:    shade-color($danger, 40%);
+$light-border-subtle-dark:     $gray-700;
+$dark-border-subtle-dark:      $gray-800;
+
+$body-color-dark:           $gray-300;
+$body-bg-dark:              $gray-900;
+$body-secondary-color-dark: rgba($body-color-dark, .75);
+$body-secondary-bg-dark:    $gray-800;
+$body-tertiary-color-dark:  rgba($body-color-dark, .5);
+$body-tertiary-bg-dark:     mix($gray-800, $gray-900, 50%);
+$body-emphasis-color-dark:  $white;
+
+$border-color-dark:             $gray-700;
+$border-color-translucent-dark: rgba($white, .15);
+
+$headings-color-dark: inherit;
+$link-color-dark:     tint-color($primary, 40%);
+$link-hover-color-dark: shift-color($link-color-dark, -$link-shade-percentage);
+
+$code-color-dark: tint-color($code-color, 40%);
+$mark-color-dark: $body-color-dark;
+$mark-bg-dark:    shade-color($gold, 40%);
+
+$form-select-indicator-color-dark: $body-color-dark;
+$form-switch-color-dark:           rgba($white, .25);
+
+$form-valid-color-dark:        tint-color($success, 40%);
+$form-valid-border-color-dark: tint-color($success, 40%);
+$form-invalid-color-dark:      tint-color($danger, 40%);
+$form-invalid-border-color-dark: tint-color($danger, 40%);
+
+$accordion-icon-color-dark:        $primary-text-emphasis-dark;
+$accordion-icon-active-color-dark: $primary-text-emphasis-dark;

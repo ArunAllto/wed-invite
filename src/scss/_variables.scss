@@ -1,0 +1,811 @@
+// =============================================================================
+// DESIGN SYSTEM OVERRIDES (light / base theme)
+// -----------------------------------------------------------------------------
+// Every value below is one of Bootstrap's own `!default` Sass variables.
+// Setting it here, before Bootstrap's own variables file loads, means
+// Bootstrap's default never takes effect — so every class that reads that
+// variable (buttons, cards, navbar, dropdowns, modals, forms, alerts, ...)
+// is generated using your value. Nothing else in this project needs to
+// change to pick up a new look; edit only this file (and _variables-dark.scss
+// for the dark color mode).
+//
+// Sections mirror Bootstrap's own scss/_variables.scss 1-for-1, so anything
+// you don't see here can still be added — just copy the variable name from
+// https://github.com/twbs/bootstrap/blob/v5.3.3/scss/_variables.scss and set
+// it in the matching section below.
+//
+// Order matters and must not change:
+//   1) functions        -> color/math helpers used below (tint-color, shade-color, ...)
+//   2) your overrides    -> this file, then _variables-dark.scss
+//   3) bootstrap.scss    -> the whole framework, built on top of the overrides
+// =============================================================================
+
+@import "bootstrap/scss/functions";
+
+// -----------------------------------------------------------------------------
+// 1. Color system
+// -----------------------------------------------------------------------------
+// Warm, tan-tinted neutrals (instead of Bootstrap's cool grays) so neutral
+// surfaces sit naturally alongside the cream/gold palette below.
+$white:    #fffdf8;
+$gray-100: #f7f1e4;
+$gray-200: #efe6d8;
+$gray-300: #e0d3bb;
+$gray-400: #c9b896;
+$gray-500: #a6916d;
+$gray-600: #7a6a4e;
+$gray-700: #5a4c38;
+$gray-800: #3b2f22;
+$gray-900: #241c15;
+$black:    #1a1310;
+
+// Palette read off a maroon / forest-green / gold / ivory wedding-invite
+// reference: deep wine maroon for primary actions, a dark forest green for
+// secondary surfaces and headings, warm gold for accents/highlights, a
+// dusty blush for softer info states, and cream for page backgrounds.
+$maroon:      #7a1f3d;
+$forest:      #1b4332;
+$gold:        #c9a227;
+$leaf-green:  #3f7d58;
+$blush:       #d98a96;
+$crimson:     #b3261e;
+$ivory:       #fbf3e4;
+
+$primary:   $maroon;
+$secondary: $forest;
+$success:   $leaf-green;
+$info:      $blush;
+$warning:   $gold;
+$danger:    $crimson;
+$light:     $ivory;
+$dark:      $gray-900;
+
+// Merges with Bootstrap's own map — the only place to add/rename/remove
+// theme colors that flow into buttons, alerts, badges, text utilities, etc.
+$theme-colors: (
+  "primary":   $primary,
+  "secondary": $secondary,
+  "success":   $success,
+  "info":      $info,
+  "warning":   $warning,
+  "danger":    $danger,
+  "light":     $light,
+  "dark":      $dark,
+);
+
+// Contrast ratio used to decide whether text on a color should be light or dark
+$min-contrast-ratio: 4.5;
+
+// "-text-emphasis", "-bg-subtle" and "-border-subtle" variants generated per
+// theme color (e.g. .text-primary-emphasis, .bg-primary-subtle, .border-primary-subtle)
+$primary-text-emphasis:   shade-color($primary, 60%);
+$secondary-text-emphasis: shade-color($secondary, 60%);
+$success-text-emphasis:   shade-color($success, 60%);
+$info-text-emphasis:      shade-color($info, 60%);
+$warning-text-emphasis:   shade-color($warning, 60%);
+$danger-text-emphasis:    shade-color($danger, 60%);
+$light-text-emphasis:     $gray-700;
+$dark-text-emphasis:      $gray-700;
+
+$primary-bg-subtle:   tint-color($primary, 80%);
+$secondary-bg-subtle: tint-color($secondary, 80%);
+$success-bg-subtle:   tint-color($success, 80%);
+$info-bg-subtle:      tint-color($info, 80%);
+$warning-bg-subtle:   tint-color($warning, 80%);
+$danger-bg-subtle:    tint-color($danger, 80%);
+$light-bg-subtle:     mix($gray-100, $white);
+$dark-bg-subtle:      $gray-400;
+
+$primary-border-subtle:   tint-color($primary, 60%);
+$secondary-border-subtle: tint-color($secondary, 60%);
+$success-border-subtle:   tint-color($success, 60%);
+$info-border-subtle:      tint-color($info, 60%);
+$warning-border-subtle:   tint-color($warning, 60%);
+$danger-border-subtle:    tint-color($danger, 60%);
+$light-border-subtle:     $gray-200;
+$dark-border-subtle:      $gray-500;
+
+// -----------------------------------------------------------------------------
+// 2. Global options
+// -----------------------------------------------------------------------------
+$enable-caret:                true;
+$enable-rounded:               true;
+$enable-shadows:               false;
+$enable-gradients:             false;
+$enable-transitions:           true;
+$enable-reduced-motion:        true;
+$enable-smooth-scroll:         true;
+$enable-grid-classes:          true;
+$enable-container-classes:     true;
+$enable-cssgrid:               false;
+$enable-button-pointers:       true;
+$enable-rfs:                   true;
+$enable-validation-icons:      true;
+$enable-negative-margins:      true;
+$enable-important-utilities:   true;
+$enable-dark-mode:             true;
+$color-mode-type:              data; // toggle dark mode via [data-bs-theme="dark"]
+
+// -----------------------------------------------------------------------------
+// 3. Typography
+// -----------------------------------------------------------------------------
+
+// Custom font families (loaded via Google Fonts in index.html — see the
+// <link> tags in <head>). Each also gets a `.font-*` utility class in
+// _custom.scss so any element can opt into it directly in markup.
+$font-instrument-sans:  "Instrument Sans", "Segoe UI", Roboto, sans-serif;
+$font-instrument-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+$font-manrope:          "Manrope", "Segoe UI", Roboto, sans-serif;
+$font-gloock:           "Gloock", Georgia, "Times New Roman", serif;
+
+// Referenced by the `.font-*` utility loop in _custom.scss — add new custom
+// fonts to both this map and the variables above.
+$font-families: (
+  "instrument-sans":  $font-instrument-sans,
+  "instrument-serif": $font-instrument-serif,
+  "manrope":          $font-manrope,
+  "gloock":           $font-gloock,
+);
+
+// Bootstrap's own typography variables, built from the custom fonts above
+$font-family-sans-serif: $font-manrope, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+$font-family-monospace:  "SFMono-Regular", Menlo, Consolas, monospace;
+$headings-font-family:   $font-gloock;
+$display-font-family:    $font-gloock;
+
+$font-size-root: null; // affects `rem`; leave null to inherit the browser default
+$font-size-base: 1rem;
+$font-size-sm:   $font-size-base * .875;
+$font-size-lg:   $font-size-base * 1.25;
+
+$font-weight-light:    300;
+$font-weight-normal:   400;
+$font-weight-medium:   500;
+$font-weight-semibold: 600;
+$font-weight-bold:     700;
+
+$line-height-base: 1.6;
+$line-height-sm:   1.25;
+$line-height-lg:   2;
+
+$h1-font-size: $font-size-base * 2.5;
+$h2-font-size: $font-size-base * 2;
+$h3-font-size: $font-size-base * 1.75;
+$h4-font-size: $font-size-base * 1.5;
+$h5-font-size: $font-size-base * 1.25;
+$h6-font-size: $font-size-base;
+
+$headings-margin-bottom: $font-size-base * .5;
+$headings-font-weight:   700;
+$headings-line-height:   1.25;
+$headings-color:         inherit;
+
+$display-font-sizes: (
+  1: 5rem,
+  2: 4.5rem,
+  3: 4rem,
+  4: 3.5rem,
+  5: 3rem,
+  6: 2.5rem,
+);
+$display-font-weight: 300;
+$display-line-height: $headings-line-height;
+
+$lead-font-size:   $font-size-base * 1.25;
+$lead-font-weight: 300;
+$small-font-size:  .875em;
+
+$blockquote-margin-y:         $font-size-base;
+$blockquote-font-size:        $font-size-base * 1.25;
+$blockquote-footer-color:     $gray-600;
+$blockquote-footer-font-size: $small-font-size;
+
+$hr-margin-y:     1rem;
+$hr-color:        inherit;
+$hr-opacity:      .25;
+
+$mark-padding: .1875em;
+$mark-bg:      tint-color($gold, 70%);
+
+// -----------------------------------------------------------------------------
+// 4. Body, links, position
+// -----------------------------------------------------------------------------
+$body-color: $gray-900;
+$body-bg:    $light;
+
+$body-secondary-color: rgba($body-color, .75);
+$body-secondary-bg:    $gray-200;
+$body-tertiary-color:  rgba($body-color, .5);
+$body-tertiary-bg:     $gray-100;
+$body-emphasis-color:  $black;
+
+$link-color:            $primary;
+$link-decoration:        underline;
+$link-shade-percentage:  20%;
+$link-hover-color:       shift-color($link-color, $link-shade-percentage);
+$link-hover-decoration:  null;
+
+$paragraph-margin-bottom: 1rem;
+
+$position-values: (
+  0: 0,
+  50: 50%,
+  100: 100%,
+);
+
+// -----------------------------------------------------------------------------
+// 5. Spacing
+// -----------------------------------------------------------------------------
+$spacer: 1rem;
+$spacers: (
+  0: 0,
+  1: $spacer * .25,
+  2: $spacer * .5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+  6: $spacer * 4.5,
+);
+
+// -----------------------------------------------------------------------------
+// 6. Grid
+// -----------------------------------------------------------------------------
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px,
+);
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1320px,
+);
+
+$grid-columns:      12;
+$grid-gutter-width: 1.5rem;
+$grid-row-columns:  6;
+
+// -----------------------------------------------------------------------------
+// 7. Borders, radius, shadows, focus ring, transitions
+// -----------------------------------------------------------------------------
+$border-width:             1px;
+$border-widths: (
+  1: 1px,
+  2: 2px,
+  3: 3px,
+  4: 4px,
+  5: 5px,
+);
+$border-style:             solid;
+$border-color:             $gray-300;
+$border-color-translucent: rgba($black, .175);
+
+$border-radius:      .5rem;
+$border-radius-sm:   .35rem;
+$border-radius-lg:   .75rem;
+$border-radius-xl:   1rem;
+$border-radius-xxl:  1.5rem;
+$border-radius-pill: 50rem;
+
+$box-shadow:        0 .5rem 1rem rgba($black, .1);
+$box-shadow-sm:     0 .125rem .25rem rgba($black, .075);
+$box-shadow-lg:     0 1rem 3rem rgba($black, .175);
+$box-shadow-inset:  inset 0 1px 2px rgba($black, .075);
+
+$component-active-color: $white;
+$component-active-bg:    $primary;
+
+$focus-ring-width:   .25rem;
+$focus-ring-opacity: .25;
+$focus-ring-color:   rgba($primary, $focus-ring-opacity);
+$focus-ring-blur:    0;
+
+$caret-width:          .3em;
+$caret-vertical-align: $caret-width * .85;
+$caret-spacing:        $caret-width * .85;
+
+$transition-base:     all .2s ease-in-out;
+$transition-fade:     opacity .15s linear;
+$transition-collapse: height .35s ease;
+
+$aspect-ratios: (
+  "1x1": 100%,
+  "4x3": calc(3 / 4 * 100%),
+  "16x9": calc(9 / 16 * 100%),
+  "21x9": calc(9 / 21 * 100%),
+);
+
+// -----------------------------------------------------------------------------
+// 8. Tables
+// -----------------------------------------------------------------------------
+$table-cell-padding-y:    .75rem;
+$table-cell-padding-x:    .75rem;
+$table-cell-padding-y-sm: .375rem;
+$table-cell-padding-x-sm: .375rem;
+$table-th-font-weight:    null;
+$table-striped-bg-factor: .05;
+$table-active-bg-factor:  .1;
+$table-hover-bg-factor:   .075;
+$table-border-factor:     .2;
+
+// -----------------------------------------------------------------------------
+// 9. Buttons + Forms shared
+// -----------------------------------------------------------------------------
+$input-btn-padding-y:    .5rem;
+$input-btn-padding-x:    .875rem;
+$input-btn-font-size:    $font-size-base;
+$input-btn-line-height:  $line-height-base;
+
+$input-btn-focus-width:         $focus-ring-width;
+$input-btn-focus-color-opacity: $focus-ring-opacity;
+$input-btn-focus-color:         $focus-ring-color;
+$input-btn-focus-box-shadow:    0 0 $focus-ring-blur $focus-ring-width $focus-ring-color;
+
+$input-btn-padding-y-sm: .3rem;
+$input-btn-padding-x-sm: .6rem;
+$input-btn-font-size-sm: $font-size-sm;
+
+$input-btn-padding-y-lg: .65rem;
+$input-btn-padding-x-lg: 1.25rem;
+$input-btn-font-size-lg: $font-size-lg;
+
+$input-btn-border-width: $border-width;
+
+// -----------------------------------------------------------------------------
+// 10. Buttons
+// -----------------------------------------------------------------------------
+$btn-padding-y:    $input-btn-padding-y;
+$btn-padding-x:    $input-btn-padding-x;
+$btn-font-size:    $input-btn-font-size;
+$btn-font-weight:  600;
+
+$btn-padding-y-sm: $input-btn-padding-y-sm;
+$btn-padding-x-sm: $input-btn-padding-x-sm;
+$btn-font-size-sm: $input-btn-font-size-sm;
+
+$btn-padding-y-lg: $input-btn-padding-y-lg;
+$btn-padding-x-lg: $input-btn-padding-x-lg;
+$btn-font-size-lg: $input-btn-font-size-lg;
+
+$btn-border-width:   $input-btn-border-width;
+$btn-box-shadow:     inset 0 1px 0 rgba($white, .15), 0 1px 1px rgba($black, .075);
+$btn-focus-width:    $input-btn-focus-width;
+$btn-focus-box-shadow: 0 0 0 .2rem rgba($primary, .35);
+$btn-disabled-opacity: .65;
+$btn-active-box-shadow: inset 0 3px 5px rgba($black, .125);
+
+// Full capsule/pill buttons, matching the reference's rounded CTA buttons
+$btn-border-radius:    $border-radius-pill;
+$btn-border-radius-sm: $border-radius-pill;
+$btn-border-radius-lg: $border-radius-pill;
+
+$btn-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+$btn-hover-bg-shade-amount:      15%;
+$btn-hover-bg-tint-amount:       15%;
+$btn-hover-border-shade-amount:  20%;
+$btn-hover-border-tint-amount:   10%;
+$btn-active-bg-shade-amount:     20%;
+$btn-active-bg-tint-amount:      20%;
+$btn-active-border-shade-amount: 25%;
+$btn-active-border-tint-amount:  10%;
+
+// -----------------------------------------------------------------------------
+// 11. Forms
+// -----------------------------------------------------------------------------
+$form-text-margin-top: .25rem;
+$form-text-font-size:  $small-font-size;
+$form-text-color:      $gray-600;
+
+$form-label-margin-bottom: .5rem;
+$form-label-font-weight:   500;
+
+$input-padding-y:    $input-btn-padding-y;
+$input-padding-x:    $input-btn-padding-x;
+$input-font-size:    $input-btn-font-size;
+$input-font-weight:  $font-weight-normal;
+$input-line-height:  $input-btn-line-height;
+
+$input-padding-y-sm: $input-btn-padding-y-sm;
+$input-padding-x-sm: $input-btn-padding-x-sm;
+$input-font-size-sm: $input-btn-font-size-sm;
+
+$input-padding-y-lg: $input-btn-padding-y-lg;
+$input-padding-x-lg: $input-btn-padding-x-lg;
+$input-font-size-lg: $input-btn-font-size-lg;
+
+$input-bg:                    $white;
+$input-disabled-bg:           $gray-200;
+$input-color:                 $body-color;
+$input-border-color:          $gray-400;
+$input-border-width:          $input-btn-border-width;
+$input-box-shadow:            $box-shadow-inset;
+
+$input-border-radius:    $border-radius;
+$input-border-radius-sm: $border-radius-sm;
+$input-border-radius-lg: $border-radius-lg;
+
+$input-focus-bg:           $input-bg;
+$input-focus-border-color: tint-color($primary, 50%);
+$input-focus-color:        $input-color;
+$input-focus-width:        $input-btn-focus-width;
+$input-focus-box-shadow:   0 0 0 .2rem rgba($primary, .25);
+
+$input-placeholder-color: $gray-600;
+$input-plaintext-color:   $body-color;
+
+$input-transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+$form-check-input-width:         1.125em;
+$form-check-min-height:          $font-size-base * $line-height-base;
+$form-check-padding-start:       $form-check-input-width + .5em;
+$form-check-input-border:        1px solid $gray-400;
+$form-check-input-border-radius: .25em;
+$form-check-radio-border-radius: 50%;
+$form-check-input-focus-border:  $input-focus-border-color;
+
+$form-check-input-checked-color:        $component-active-color;
+$form-check-input-checked-bg-color:     $component-active-bg;
+$form-check-input-checked-border-color: $form-check-input-checked-bg-color;
+
+$form-switch-color:         rgba($black, .25);
+$form-switch-width:         2.25em;
+$form-switch-border-radius: $form-switch-width;
+
+$input-group-addon-color:        $input-color;
+$input-group-addon-bg:           $gray-100;
+$input-group-addon-border-color: $input-border-color;
+
+$form-select-padding-y:      $input-padding-y;
+$form-select-padding-x:      $input-padding-x;
+$form-select-font-size:      $input-font-size;
+$form-select-color:          $input-color;
+$form-select-bg:             $input-bg;
+$form-select-border-width:   $input-border-width;
+$form-select-border-color:   $input-border-color;
+$form-select-border-radius:  $input-border-radius;
+$form-select-box-shadow:     $box-shadow-inset;
+$form-select-focus-border-color: $input-focus-border-color;
+
+$form-range-track-height:        .5rem;
+$form-range-track-bg:            $gray-200;
+$form-range-track-border-radius: 1rem;
+$form-range-thumb-width:         1.1rem;
+$form-range-thumb-bg:            $component-active-bg;
+$form-range-thumb-border-radius: 1rem;
+
+$form-file-button-color:    $input-color;
+$form-file-button-bg:       $gray-100;
+$form-file-button-hover-bg: $gray-200;
+
+$form-floating-padding-y:       1rem;
+$form-floating-label-opacity:   .65;
+
+// Form validation
+$form-feedback-margin-top:    $form-text-margin-top;
+$form-feedback-font-size:     $form-text-font-size;
+$form-feedback-valid-color:   $success;
+$form-feedback-invalid-color: $danger;
+
+$form-valid-color:           $form-feedback-valid-color;
+$form-valid-border-color:    $form-feedback-valid-color;
+$form-invalid-color:         $form-feedback-invalid-color;
+$form-invalid-border-color:  $form-feedback-invalid-color;
+
+// -----------------------------------------------------------------------------
+// 12. Z-index scale
+// -----------------------------------------------------------------------------
+$zindex-dropdown:           1000;
+$zindex-sticky:             1020;
+$zindex-fixed:              1030;
+$zindex-offcanvas-backdrop: 1040;
+$zindex-offcanvas:          1045;
+$zindex-modal-backdrop:     1050;
+$zindex-modal:              1055;
+$zindex-popover:            1070;
+$zindex-tooltip:            1080;
+$zindex-toast:              1090;
+
+// -----------------------------------------------------------------------------
+// 13. Navs & Navbar
+// -----------------------------------------------------------------------------
+$nav-link-padding-y:      .5rem;
+$nav-link-padding-x:      1rem;
+$nav-link-font-weight:    500;
+$nav-link-color:          $link-color;
+$nav-link-hover-color:    $link-hover-color;
+$nav-link-disabled-color: $gray-500;
+
+$nav-tabs-border-color:             $border-color;
+$nav-tabs-border-radius:            $border-radius;
+$nav-tabs-link-active-color:        $body-color;
+$nav-tabs-link-active-bg:           $body-bg;
+
+$nav-pills-border-radius:        $border-radius;
+$nav-pills-link-active-color:    $component-active-color;
+$nav-pills-link-active-bg:       $component-active-bg;
+
+$navbar-padding-y:           .75rem;
+$navbar-nav-link-padding-x:  .75rem;
+$navbar-brand-font-size:     1.25rem;
+$navbar-brand-margin-end:    1.5rem;
+
+$navbar-toggler-padding-y:     .25rem;
+$navbar-toggler-padding-x:     .75rem;
+$navbar-toggler-border-radius: $btn-border-radius;
+
+$navbar-light-color:          rgba($dark, .65);
+$navbar-light-hover-color:    rgba($dark, .85);
+$navbar-light-active-color:   $primary;
+$navbar-light-disabled-color: rgba($dark, .3);
+$navbar-light-toggler-border-color: rgba($dark, .15);
+$navbar-light-brand-color:    $navbar-light-active-color;
+
+$navbar-dark-color:          rgba($white, .6);
+$navbar-dark-hover-color:    rgba($white, .85);
+$navbar-dark-active-color:   $white;
+$navbar-dark-disabled-color: rgba($white, .25);
+$navbar-dark-toggler-border-color: rgba($white, .1);
+$navbar-dark-brand-color:    $navbar-dark-active-color;
+
+// -----------------------------------------------------------------------------
+// 14. Dropdowns
+// -----------------------------------------------------------------------------
+$dropdown-min-width:      11rem;
+$dropdown-padding-y:      .5rem;
+$dropdown-font-size:      $font-size-base;
+$dropdown-border-color:   $border-color-translucent;
+$dropdown-border-radius:  $border-radius;
+$dropdown-box-shadow:     $box-shadow;
+
+$dropdown-link-hover-bg:       $gray-100;
+$dropdown-link-active-color:   $component-active-color;
+$dropdown-link-active-bg:      $component-active-bg;
+$dropdown-link-disabled-color: $gray-500;
+
+$dropdown-item-padding-y: $spacer * .375;
+$dropdown-item-padding-x: $spacer;
+
+$dropdown-header-color: $gray-600;
+
+$dropdown-dark-color:            $gray-300;
+$dropdown-dark-bg:               $gray-800;
+$dropdown-dark-link-hover-bg:    rgba($white, .15);
+$dropdown-dark-link-active-bg:   $dropdown-link-active-bg;
+
+// -----------------------------------------------------------------------------
+// 15. Pagination
+// -----------------------------------------------------------------------------
+$pagination-padding-y:    .5rem;
+$pagination-padding-x:    .875rem;
+$pagination-padding-y-sm: .3rem;
+$pagination-padding-x-sm: .6rem;
+$pagination-padding-y-lg: .65rem;
+$pagination-padding-x-lg: 1.25rem;
+
+$pagination-color:           $link-color;
+$pagination-bg:              $body-bg;
+$pagination-border-radius:   $border-radius;
+$pagination-border-color:    $border-color;
+
+$pagination-hover-color: $link-hover-color;
+$pagination-hover-bg:    $gray-100;
+
+$pagination-active-color: $component-active-color;
+$pagination-active-bg:    $component-active-bg;
+$pagination-active-border-color: $component-active-bg;
+
+$pagination-disabled-color:      $gray-500;
+$pagination-disabled-bg:         $gray-100;
+$pagination-disabled-border-color: $border-color;
+
+$pagination-border-radius-sm: $border-radius-sm;
+$pagination-border-radius-lg: $border-radius-lg;
+
+// -----------------------------------------------------------------------------
+// 16. Placeholders
+// -----------------------------------------------------------------------------
+$placeholder-opacity-max: .5;
+$placeholder-opacity-min: .2;
+
+// -----------------------------------------------------------------------------
+// 17. Cards
+// -----------------------------------------------------------------------------
+$card-spacer-y:            1.25rem;
+$card-spacer-x:             1.25rem;
+$card-title-spacer-y:       $spacer * .5;
+$card-border-width:         $border-width;
+$card-border-color:         $border-color;
+$card-border-radius:        $border-radius-lg;
+$card-cap-padding-y:        $card-spacer-y * .5;
+$card-cap-padding-x:        $card-spacer-x;
+$card-cap-bg:               $gray-100;
+$card-bg:                   $white;
+$card-img-overlay-padding:  $spacer;
+$card-group-margin:         $grid-gutter-width * .5;
+
+// -----------------------------------------------------------------------------
+// 18. Accordion
+// -----------------------------------------------------------------------------
+$accordion-padding-y:        1rem;
+$accordion-padding-x:        1.25rem;
+$accordion-bg:               $body-bg;
+$accordion-border-color:     $border-color;
+$accordion-border-radius:    $border-radius;
+
+$accordion-button-active-bg:    $primary-bg-subtle;
+$accordion-button-active-color: $primary-text-emphasis;
+$accordion-button-focus-box-shadow: $btn-focus-box-shadow;
+
+$accordion-icon-width:        1.25rem;
+$accordion-icon-active-color: $primary-text-emphasis;
+
+// -----------------------------------------------------------------------------
+// 19. Tooltips & Popovers
+// -----------------------------------------------------------------------------
+$tooltip-font-size:      $font-size-sm;
+$tooltip-max-width:      220px;
+$tooltip-color:          $white;
+$tooltip-bg:             $gray-900;
+$tooltip-border-radius:  $border-radius-sm;
+$tooltip-opacity:        .95;
+$tooltip-padding-y:      $spacer * .3;
+$tooltip-padding-x:      $spacer * .6;
+
+$popover-font-size:          $font-size-sm;
+$popover-bg:                 $body-bg;
+$popover-max-width:          280px;
+$popover-border-color:       $border-color-translucent;
+$popover-border-radius:      $border-radius-lg;
+$popover-box-shadow:         $box-shadow;
+$popover-header-bg:          $gray-100;
+$popover-header-color:       $headings-color;
+$popover-body-color:         $body-color;
+
+// -----------------------------------------------------------------------------
+// 20. Toasts
+// -----------------------------------------------------------------------------
+$toast-padding-x:        .875rem;
+$toast-padding-y:        .625rem;
+$toast-font-size:        $font-size-sm;
+$toast-border-radius:    $border-radius;
+$toast-border-color:     $border-color-translucent;
+$toast-box-shadow:       $box-shadow;
+
+// -----------------------------------------------------------------------------
+// 21. Badges
+// -----------------------------------------------------------------------------
+$badge-font-size:      .75em;
+$badge-font-weight:    700;
+$badge-padding-y:       .4em;
+$badge-padding-x:       .65em;
+$badge-border-radius:   $border-radius-sm;
+
+// -----------------------------------------------------------------------------
+// 22. Modals
+// -----------------------------------------------------------------------------
+$modal-inner-padding:         $spacer;
+$modal-content-border-color:  $border-color-translucent;
+$modal-content-border-radius: $border-radius-lg;
+$modal-content-box-shadow-sm-up: $box-shadow;
+$modal-backdrop-bg:           $black;
+$modal-backdrop-opacity:      .5;
+$modal-header-border-color:   $border-color;
+$modal-header-padding-y:      $modal-inner-padding;
+$modal-header-padding-x:      $modal-inner-padding;
+
+$modal-sm: 320px;
+$modal-md: 520px;
+$modal-lg: 820px;
+$modal-xl: 1160px;
+
+// -----------------------------------------------------------------------------
+// 23. Alerts
+// -----------------------------------------------------------------------------
+$alert-padding-y:      .875rem;
+$alert-padding-x:      1.25rem;
+$alert-margin-bottom:  1rem;
+$alert-border-radius:  $border-radius;
+$alert-link-font-weight: 700;
+$alert-border-width:   $border-width;
+
+// -----------------------------------------------------------------------------
+// 24. Progress bars
+// -----------------------------------------------------------------------------
+$progress-height:          1rem;
+$progress-font-size:       $font-size-base * .75;
+$progress-bg:              $gray-200;
+$progress-border-radius:   $border-radius-pill;
+$progress-box-shadow:      $box-shadow-inset;
+$progress-bar-color:       $white;
+$progress-bar-bg:          $primary;
+
+// -----------------------------------------------------------------------------
+// 25. List group
+// -----------------------------------------------------------------------------
+$list-group-color:        $body-color;
+$list-group-bg:           $body-bg;
+$list-group-border-color: $border-color;
+$list-group-border-radius: $border-radius;
+$list-group-item-padding-y: $spacer * .625;
+$list-group-item-padding-x: $spacer;
+$list-group-hover-bg:      $gray-100;
+$list-group-active-color:  $component-active-color;
+$list-group-active-bg:     $component-active-bg;
+$list-group-active-border-color: $list-group-active-bg;
+$list-group-disabled-color: $gray-500;
+
+// -----------------------------------------------------------------------------
+// 26. Thumbnails, figures, breadcrumbs
+// -----------------------------------------------------------------------------
+$thumbnail-padding:      .25rem;
+$thumbnail-bg:           $body-bg;
+$thumbnail-border-color: $border-color;
+$thumbnail-border-radius: $border-radius;
+$thumbnail-box-shadow:   $box-shadow-sm;
+
+$figure-caption-font-size: $small-font-size;
+$figure-caption-color:     $gray-600;
+
+$breadcrumb-padding-y:       0;
+$breadcrumb-padding-x:       0;
+$breadcrumb-item-padding-x:  .5rem;
+$breadcrumb-margin-bottom:   1rem;
+$breadcrumb-divider-color:   $gray-600;
+$breadcrumb-active-color:    $gray-600;
+$breadcrumb-divider:         quote("/");
+$breadcrumb-border-radius:   null;
+
+// -----------------------------------------------------------------------------
+// 27. Carousel
+// -----------------------------------------------------------------------------
+$carousel-control-color:  $white;
+$carousel-control-width:  15%;
+$carousel-indicator-active-bg: $white;
+$carousel-caption-color:  $white;
+
+$carousel-dark-indicator-active-bg: $black;
+$carousel-dark-caption-color:       $black;
+
+// -----------------------------------------------------------------------------
+// 28. Spinners
+// -----------------------------------------------------------------------------
+$spinner-width:        2rem;
+$spinner-border-width: .25em;
+
+$spinner-width-sm:        1rem;
+$spinner-border-width-sm: .2em;
+
+// -----------------------------------------------------------------------------
+// 29. Close button, offcanvas
+// -----------------------------------------------------------------------------
+$btn-close-width:      1em;
+$btn-close-color:      $black;
+$btn-close-opacity:    .5;
+$btn-close-hover-opacity: .75;
+
+$offcanvas-padding-y:      $modal-inner-padding;
+$offcanvas-padding-x:      $modal-inner-padding;
+$offcanvas-horizontal-width: 420px;
+$offcanvas-vertical-height:  35vh;
+$offcanvas-border-color:     $modal-content-border-color;
+$offcanvas-bg-color:         $body-bg;
+$offcanvas-color:            $body-color;
+$offcanvas-box-shadow:       $box-shadow;
+
+// -----------------------------------------------------------------------------
+// 30. Code
+// -----------------------------------------------------------------------------
+$code-font-size: $small-font-size;
+$code-color:     $crimson;
+
+$kbd-padding-y: .1875rem;
+$kbd-padding-x: .375rem;
+$kbd-color:     $white;
+$kbd-bg:        $gray-900;
