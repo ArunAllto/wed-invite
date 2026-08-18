@@ -10,3 +10,111 @@
     font-family: $family !important;
   }
 }
+
+// Bootstrap has no gradient-text utility (background-clip: text isn't a
+// CSS property Bootstrap's utility API can express), so this is the one
+// hand-written rule the design requires — used only for the hero couple
+// names and the "Our Story" heading, both teal-gradient text in the design.
+.text-gradient-teal {
+  background: linear-gradient(90deg, $teal-light, $teal-deep);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+// Falling-petals overlay — Bootstrap has no particle/rain-animation
+// utility, so this is the third necessary hand-written addition. The
+// markup is one <img class="petal" src="/images/lotus-petal.png"> repeated;
+// every position, size, speed and drift-direction difference comes from
+// this loop (using .z-petals from the $zindex-levels extension in
+// _variables.scss for stacking), not from inline styles. Sizes/positions
+// use Sass's random() so they don't repeat in an obvious pattern — the
+// values are fixed at build time (not re-rolled per page load), which is
+// what keeps the animation stable across a session.
+$petal-count: 20;
+$petal-large-index: 10; // 1 of 20 (5%) is the rare oversized flower
+$petal-aspect: 0.767; // 56 / 73 — the source image's height:width ratio, kept at every size
+
+.petals {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.petal {
+  position: absolute;
+  top: 0;
+  opacity: 0;
+  animation-name: petal-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes petal-fall {
+  0%   { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+  8%   { opacity: .9; }
+  92%  { opacity: .9; }
+  100% { transform: translateY(110vh) translateX(var(--petal-drift, 40px)) rotate(360deg); opacity: 0; }
+}
+
+@for $i from 1 through $petal-count {
+  // Everyday flowers: 18–40px. The one at $petal-large-index: 90–120px.
+  $w: if($i == $petal-large-index, random(30) * 1px + 90px, random(22) * 1px + 18px);
+
+  .petal:nth-of-type(#{$i}) {
+    left: random(92) * 1% + 2%;
+    width: $w;
+    height: $w * $petal-aspect;
+    animation-duration: random(9) * 1s + 10s;
+    animation-delay: -($i * 1.2s);
+    --petal-drift: #{(if(random(2) == 1, 1, -1)) * (random(40) + 20)}px;
+  }
+}
+
+// Respect the user's OS-level motion preference, matching this project's
+// own $enable-reduced-motion setting for Bootstrap's built-in transitions.
+@media (prefers-reduced-motion: reduce) {
+  .petal {
+    display: none;
+  }
+}
+
+// Confetti burst — the fourth necessary hand-written addition, triggered
+// by the "Confirm Attendance" buttons (src/main.js). Bootstrap has no
+// particle-burst component; unlike the petals above, each burst needs to
+// look different every click, so position/color/rotation are set by JS at
+// click time (element.style, not authored inline styles) rather than
+// precomputed by Sass — there's no way to precompute genuine per-click
+// randomness at build time.
+.confetti-burst {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -12px;
+  width: 8px;
+  height: 14px;
+  opacity: 0;
+  animation-name: confetti-fall;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes confetti-fall {
+  0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 1; }
+  100% {
+    transform: translateY(100vh) translateX(var(--confetti-drift, 0px)) rotate(var(--confetti-rot, 360deg));
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confetti-burst {
+    display: none;
+  }
+}
