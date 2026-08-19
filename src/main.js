@@ -229,7 +229,7 @@ if (weddingSong) {
   }
 
   function startSongAfterInteraction(event) {
-    if (event.target.closest("button, input, a")) return;
+    if (event.target.closest("#songPlay, #floatingSongPlay")) return;
 
     if (weddingSong.paused) {
       weddingSong.play().then(() => {
