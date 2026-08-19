@@ -213,50 +213,49 @@ if (weddingSong) {
     updateSongControls();
   });
 
-  function attemptAutoplay() {
+  function playSong() {
     if (!weddingSong.paused) return;
 
     weddingSong.play().then(() => {
       if (songStatus) songStatus.textContent = "Now playing";
       updateSongControls();
-    }).catch((err) => {
-      if (err.name === "NotAllowedError") {
-        if (songStatus) songStatus.textContent = "Tap play to start the song";
-      } else if (songStatus) {
-        songStatus.textContent = "The song could not be loaded. Please try again.";
-      }
+    }).catch(() => {
+      if (songStatus) songStatus.textContent = "Tap play to start the song";
     });
   }
 
-  function startSongAfterInteraction(event) {
-    if (event.target.closest("#songPlay, #floatingSongPlay")) return;
-
-    if (weddingSong.paused) {
-      weddingSong.play().then(() => {
-        if (songStatus) songStatus.textContent = "Now playing";
-        updateSongControls();
-      }).catch(() => {});
-    }
-    document.removeEventListener("pointerdown", startSongAfterInteraction);
-    document.removeEventListener("keydown", startSongAfterInteraction);
+  // Autoplay gate. Browsers refuse to start audio with sound until the
+  // visitor has interacted with the page, and nothing the page does by
+  // itself counts — so the wishes modal is opened on every load to collect
+  // that interaction. Dismissing it (the × button, clicking the backdrop,
+  // Esc, or the "Enter Site" button) all funnel through hidden.bs.modal,
+  // and each of those is a real user gesture, which is what unlocks
+  // playback. Sending a wish leaves the modal open, so that button starts
+  // the song directly instead.
+  //
+  // The gesture permission a browser grants this way is "sticky": it lasts
+  // for the life of the page, so starting playback after the modal's close
+  // animation finishes is still allowed.
+  const wishesModalEl = document.getElementById("wishesModal");
+  if (wishesModalEl) {
+    bootstrap.Modal.getOrCreateInstance(wishesModalEl).show();
+    wishesModalEl.addEventListener("hidden.bs.modal", playSong);
+    document.getElementById("wishSubmitBtn")?.addEventListener("click", playSong);
   }
 
-  weddingSong.addEventListener("canplay", attemptAutoplay, { once: true });
-  window.addEventListener("load", attemptAutoplay, { once: true });
-  document.addEventListener("pointerdown", startSongAfterInteraction, { once: true });
-  document.addEventListener("keydown", startSongAfterInteraction, { once: true });
-  attemptAutoplay();
+  // Still worth one unprompted attempt: browsers make an exception for
+  // sites the visitor uses often, so for those guests the song starts
+  // immediately rather than waiting for the modal. Silently ignored when
+  // refused, since the modal gate above is the real path.
+  weddingSong.addEventListener("canplay", playSong, { once: true });
 }
 
-// "Send Us Wishes" popup sends form entries to Telegram. The bot token is
-// intentionally loaded from environment variables rather than being stored in
-// the repo. Vite will inline the value at build time, so the value still
-// cannot be considered truly secret in a browser-only app. For real secret
-// protection, the request should be proxied through a backend or serverless
-// function and the token should stay only on the server.
-const WISHES_BOT_TOKEN = import.meta.env.VITE_WISHES_BOT_TOKEN || "";
-const WISHES_CHAT_ID = import.meta.env.VITE_WISHES_CHAT_ID || "";
-const WISHES_API = WISHES_BOT_TOKEN ? `https://api.telegram.org/bot${WISHES_BOT_TOKEN}/sendMessage` : "";
+// "Send Us Wishes" popup posts to our own serverless function, which is what
+// actually talks to Telegram (see netlify/functions/wish.mjs). The bot token
+// stays on the server and is never shipped to the browser — a static page
+// cannot hold a secret, since anything it needs at runtime is readable by
+// anyone who opens developer tools.
+const WISHES_ENDPOINT = "/.netlify/functions/wish";
 
 const wishesForm = document.getElementById("wishesForm");
 if (wishesForm) {
@@ -275,28 +274,17 @@ if (wishesForm) {
       return;
     }
 
-    if (!WISHES_BOT_TOKEN || !WISHES_CHAT_ID || !WISHES_API) {
-      wishStatusEl.className = "alert alert-danger";
-      wishStatusEl.textContent = "The wishes form is not configured yet. Please add the Telegram bot credentials.";
-      wishStatusEl.classList.remove("d-none");
-      return;
-    }
-
     wishSubmitBtn.disabled = true;
     wishSubmitBtn.textContent = "Sending...";
     wishStatusEl.classList.add("d-none");
 
-    // No parse_mode is set, so Telegram treats this as plain text —
-    // nothing in name/message can be interpreted as markup.
-    const text = `💌 New wish for Arun & Aswathy\nFrom: ${name}\n\n${message}`;
-
     try {
-      const res = await fetch(WISHES_API, {
+      const res = await fetch(WISHES_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: WISHES_CHAT_ID, text }),
+        body: JSON.stringify({ name, message }),
       });
-      if (!res.ok) throw new Error(`Telegram API responded ${res.status}`);
+      if (!res.ok) throw new Error(`Wishes endpoint responded ${res.status}`);
 
       wishStatusEl.className = "alert alert-success";
       wishStatusEl.textContent = "Thank you! Your wish has been sent. 🎉";

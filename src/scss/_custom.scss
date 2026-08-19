@@ -55,20 +55,17 @@
 }
 
 .song-player__cover {
-  display: grid;
   width: 76px;
   height: 76px;
   flex: 0 0 76px;
-  place-content: center;
+  overflow: hidden;
   border-radius: 1rem;
   background: $ivory;
-  color: $maroon;
-  font-family: $font-instrument-serif;
-  font-size: 1.3rem;
   box-shadow: 0 .5rem 1rem rgba($black, .2);
 }
 
-.song-player__cover span { font-size: .75rem; text-align: center; }
+.song-player__cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
 .song-player__eyebrow { color: $gold-light; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; }
 .song-player__title { font-family: $font-gloock; font-size: clamp(1.5rem, 4vw, 2.1rem); }
 .song-player__artist { color: rgba($white, .78); }
