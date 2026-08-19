@@ -24,20 +24,29 @@ function json(data, status = 200) {
 // Requests are only accepted from this site's own pages. On its own this is
 // not a security boundary — an Origin header is trivially forged by anything
 // that isn't a browser — but it costs nothing and stops the endpoint from
-// being casually embedded in someone else's page. Netlify injects URL and
-// DEPLOY_PRIME_URL automatically; the localhost entries cover `netlify dev`.
-function isAllowedOrigin(origin) {
+// being casually embedded in someone else's page.
+//
+// This compares the Origin against the host the request actually arrived on,
+// rather than an allowlist built from Netlify's env vars. Netlify serves the
+// same deploy under several hostnames — the production URL, per-deploy
+// permalinks like <hash>--<site>.netlify.app, branch and preview deploys, and
+// any custom domain — and an allowlist missed all but the first, so the form
+// 403'd everywhere except production. Matching Origin to Host covers every
+// one of those automatically, including localhost under `netlify dev`.
+function isAllowedOrigin(req) {
+  const origin = req.headers.get("origin");
+
   // Same-origin requests are allowed to omit Origin entirely.
   if (!origin) return true;
 
-  const allowed = [
-    process.env.URL,
-    process.env.DEPLOY_PRIME_URL,
-    "http://localhost:8888",
-    "http://localhost:5173",
-  ].filter(Boolean);
+  const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
+  if (!host) return false;
 
-  return allowed.includes(origin);
+  try {
+    return new URL(origin).host === host;
+  } catch {
+    return false;
+  }
 }
 
 export default async (req) => {
@@ -45,7 +54,7 @@ export default async (req) => {
     return json({ error: "Method not allowed" }, 405);
   }
 
-  if (!isAllowedOrigin(req.headers.get("origin"))) {
+  if (!isAllowedOrigin(req)) {
     return json({ error: "Forbidden" }, 403);
   }
 
