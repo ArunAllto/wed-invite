@@ -154,6 +154,8 @@ const songCurrentTime = document.getElementById("songCurrentTime");
 const songDuration = document.getElementById("songDuration");
 const songStatus = document.getElementById("songStatus");
 
+if (weddingSong) weddingSong.src = `${import.meta.env.BASE_URL}audio/song.mp3`;
+
 function formatSongTime(seconds) {
   if (!Number.isFinite(seconds)) return "0:00";
   const minutes = Math.floor(seconds / 60);
@@ -226,8 +228,23 @@ if (weddingSong) {
     });
   }
 
+  function startSongAfterInteraction(event) {
+    if (event.target.closest("button, input, a")) return;
+
+    if (weddingSong.paused) {
+      weddingSong.play().then(() => {
+        if (songStatus) songStatus.textContent = "Now playing";
+        updateSongControls();
+      }).catch(() => {});
+    }
+    document.removeEventListener("pointerdown", startSongAfterInteraction);
+    document.removeEventListener("keydown", startSongAfterInteraction);
+  }
+
   weddingSong.addEventListener("canplay", attemptAutoplay, { once: true });
   window.addEventListener("load", attemptAutoplay, { once: true });
+  document.addEventListener("pointerdown", startSongAfterInteraction, { once: true });
+  document.addEventListener("keydown", startSongAfterInteraction, { once: true });
   attemptAutoplay();
 }
 

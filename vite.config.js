@@ -5,7 +5,7 @@ import { defineConfig } from "vite";
 // (`npm run dev`) Vite always serves from "/", so this only changes the
 // production build.
 export default defineConfig({
-  base: process.env.GITHUB_PAGES ? "/wed-invite/" : "/",
+  base: process.env.GITHUB_PAGES ? "./" : "/",
   css: {
     preprocessorOptions: {
       scss: {
