@@ -109,12 +109,39 @@
             <a href="#the-big-day" class="btn btn-primary">Know More →</a>
           </div>
           <div class="col-lg-6">
-            <div class="ratio ratio-4x3 rounded-top-5 rounded-bottom-3 overflow-hidden shadow">
+            <div class="song-player shadow" id="songPlayer">
               <img
                 src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23e3c9a0'/%3E%3C/svg%3E"
-                class="object-fit-cover"
+                class="song-player__photo"
                 alt="Arun and Aswathy together"
               />
+              <div class="song-player__wash"></div>
+              <div class="song-player__content">
+                <div class="d-flex align-items-center gap-3 mb-4">
+                  <div class="song-player__cover" aria-hidden="true">A <span>♡</span> A</div>
+                  <div class="min-w-0">
+                    <p class="song-player__eyebrow mb-1">Our wedding song</p>
+                    <h3 class="song-player__title text-truncate mb-0">Naan Pizhai</h3>
+                    <p class="song-player__artist text-truncate mb-0">Anirudh, Vignesh Shivan</p>
+                  </div>
+                </div>
+                <div class="song-player__timeline mb-4">
+                  <div class="d-flex justify-content-between small mb-2">
+                    <span id="songCurrentTime">0:00</span>
+                    <span id="songDuration">0:00</span>
+                  </div>
+                  <input class="song-player__range" id="songProgress" type="range" min="0" max="0" value="0" step="1" aria-label="Song progress" />
+                </div>
+                <div class="d-flex align-items-center justify-content-center gap-4">
+                  <button class="song-player__skip" type="button" id="songBack" aria-label="Restart song">↶</button>
+                  <button class="song-player__play" type="button" id="songPlay" aria-label="Play song" aria-pressed="false">
+                    <span class="song-player__play-icon" aria-hidden="true">▶</span>
+                  </button>
+                  <button class="song-player__skip" type="button" id="songForward" aria-label="Skip ahead 10 seconds">↷</button>
+                </div>
+                <p class="song-player__status text-center mb-0 mt-3" id="songStatus" role="status">Press play to listen</p>
+              </div>
+              <audio id="weddingSong" preload="metadata" autoplay src="/audio/song.mp3"></audio>
             </div>
           </div>
         </div>
@@ -527,14 +554,19 @@
     </div>
   </footer>
 
-  <!-- Floating button — opens the same "Send Us Wishes" popup -->
-  <button
-    type="button"
-    class="btn btn-whatsapp rounded-circle position-fixed bottom-0 end-0 m-4 z-3 p-3 d-flex align-items-center justify-content-center shadow fs-5 text-white"
-    data-bs-toggle="modal"
-    data-bs-target="#wishesModal"
-    aria-label="Send us your wishes"
-  >💬</button>
+  <!-- Persistent controls: music sits above the wishes button. -->
+  <div class="floating-controls position-fixed bottom-0 end-0 m-4 z-3 d-flex flex-column align-items-center gap-2">
+    <button type="button" class="floating-play" id="floatingSongPlay" aria-label="Play song" aria-pressed="false">
+      <span class="floating-play__icon" aria-hidden="true">▶</span>
+    </button>
+    <button
+      type="button"
+      class="btn btn-whatsapp rounded-circle p-3 d-flex align-items-center justify-content-center shadow fs-5 text-white"
+      data-bs-toggle="modal"
+      data-bs-target="#wishesModal"
+      aria-label="Send us your wishes"
+    >💬</button>
+  </div>
 
 </body>
 </html>

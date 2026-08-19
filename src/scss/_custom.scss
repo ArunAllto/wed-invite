@@ -22,6 +22,80 @@
   color: transparent;
 }
 
+.song-player {
+  position: relative;
+  min-height: 390px;
+  overflow: hidden;
+  border-radius: 2rem;
+  color: $white;
+  background: $maroon-dark;
+}
+
+.song-player__photo,
+.song-player__wash {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.song-player__wash {
+  background: linear-gradient(135deg, rgba($maroon-dark, .84), rgba($gold, .42));
+}
+
+.song-player__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-height: 390px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.song-player__cover {
+  display: grid;
+  width: 76px;
+  height: 76px;
+  flex: 0 0 76px;
+  place-content: center;
+  border-radius: 1rem;
+  background: $ivory;
+  color: $maroon;
+  font-family: $font-instrument-serif;
+  font-size: 1.3rem;
+  box-shadow: 0 .5rem 1rem rgba($black, .2);
+}
+
+.song-player__cover span { font-size: .75rem; text-align: center; }
+.song-player__eyebrow { color: $gold-light; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; }
+.song-player__title { font-family: $font-gloock; font-size: clamp(1.5rem, 4vw, 2.1rem); }
+.song-player__artist { color: rgba($white, .78); }
+.song-player__range { width: 100%; accent-color: $white; cursor: pointer; }
+.song-player__skip { border: 0; background: transparent; color: $white; font-size: 2rem; opacity: .82; }
+.song-player__play,
+.floating-play {
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: $white;
+  color: $maroon;
+  box-shadow: 0 .5rem 1rem rgba($black, .25);
+}
+.song-player__play { width: 76px; height: 76px; font-size: 1.5rem; }
+.song-player__play-icon { transform: translateX(2px); }
+.song-player__status { color: rgba($white, .7); font-size: .75rem; }
+.floating-controls { z-index: 1030; }
+.floating-play { width: 52px; height: 52px; font-size: 1rem; }
+.floating-play__icon { transform: translateX(1px); }
+
+@media (max-width: 575.98px) {
+  .floating-controls { margin: 1rem !important; }
+  .song-player__content { padding: 1.5rem; }
+}
+
 // Falling-petals overlay — Bootstrap has no particle/rain-animation
 // utility, so this is the third necessary hand-written addition. The
 // markup is one <img class="petal" src="/images/lotus-petal.png"> repeated;

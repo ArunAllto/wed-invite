@@ -142,15 +142,104 @@ document.querySelectorAll(".js-attendance-btn").forEach((button) => {
 
 loadAttendanceCount();
 
-// "Send Us Wishes" popup — delivers directly into a Telegram group via the
-// Bot API's sendMessage endpoint, called straight from the browser (no
-// backend). The token is necessarily public in this client-side code —
-// anyone viewing the page source could extract and reuse it — a trade-off
-// accepted when this bot was set up, in exchange for not needing any
-// server of our own.
-const WISHES_BOT_TOKEN = "8840369387:AAHvtwbw5ByF5OQXpKZDUDiZNz_-eJ0zEBY";
-const WISHES_CHAT_ID = "-5540365795";
-const WISHES_API = `https://api.telegram.org/bot${WISHES_BOT_TOKEN}/sendMessage`;
+// Shared music controls — the inline player and floating button both control
+// the same audio element so playback continues while guests browse the page.
+const weddingSong = document.getElementById("weddingSong");
+const songPlayButtons = [
+  document.getElementById("songPlay"),
+  document.getElementById("floatingSongPlay"),
+].filter(Boolean);
+const songProgress = document.getElementById("songProgress");
+const songCurrentTime = document.getElementById("songCurrentTime");
+const songDuration = document.getElementById("songDuration");
+const songStatus = document.getElementById("songStatus");
+
+function formatSongTime(seconds) {
+  if (!Number.isFinite(seconds)) return "0:00";
+  const minutes = Math.floor(seconds / 60);
+  return `${minutes}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
+}
+
+function updateSongControls() {
+  const isPlaying = weddingSong && !weddingSong.paused;
+  songPlayButtons.forEach((button) => {
+    button.setAttribute("aria-pressed", String(isPlaying));
+    button.setAttribute("aria-label", isPlaying ? "Pause song" : "Play song");
+    const icon = button.querySelector("[aria-hidden='true']");
+    if (icon) icon.textContent = isPlaying ? "Ⅱ" : "▶";
+  });
+}
+
+if (weddingSong) {
+  songPlayButtons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      if (weddingSong.paused) {
+        try {
+          await weddingSong.play();
+          if (songStatus) songStatus.textContent = "Now playing";
+        } catch (err) {
+          if (songStatus) songStatus.textContent = "The song could not be loaded. Please try again.";
+        }
+      } else {
+        weddingSong.pause();
+      }
+      updateSongControls();
+    });
+  });
+
+  document.getElementById("songBack")?.addEventListener("click", () => {
+    weddingSong.currentTime = 0;
+  });
+  document.getElementById("songForward")?.addEventListener("click", () => {
+    weddingSong.currentTime = Math.min(weddingSong.duration || 0, weddingSong.currentTime + 10);
+  });
+  songProgress?.addEventListener("input", () => {
+    weddingSong.currentTime = Number(songProgress.value);
+  });
+  weddingSong.addEventListener("loadedmetadata", () => {
+    songProgress.max = String(weddingSong.duration);
+    songDuration.textContent = formatSongTime(weddingSong.duration);
+  });
+  weddingSong.addEventListener("timeupdate", () => {
+    songProgress.value = String(weddingSong.currentTime);
+    songCurrentTime.textContent = formatSongTime(weddingSong.currentTime);
+  });
+  weddingSong.addEventListener("play", updateSongControls);
+  weddingSong.addEventListener("pause", updateSongControls);
+  weddingSong.addEventListener("ended", () => {
+    weddingSong.currentTime = 0;
+    updateSongControls();
+  });
+
+  function attemptAutoplay() {
+    if (!weddingSong.paused) return;
+
+    weddingSong.play().then(() => {
+      if (songStatus) songStatus.textContent = "Now playing";
+      updateSongControls();
+    }).catch((err) => {
+      if (err.name === "NotAllowedError") {
+        if (songStatus) songStatus.textContent = "Tap play to start the song";
+      } else if (songStatus) {
+        songStatus.textContent = "The song could not be loaded. Please try again.";
+      }
+    });
+  }
+
+  weddingSong.addEventListener("canplay", attemptAutoplay, { once: true });
+  window.addEventListener("load", attemptAutoplay, { once: true });
+  attemptAutoplay();
+}
+
+// "Send Us Wishes" popup sends form entries to Telegram. The bot token is
+// intentionally loaded from environment variables rather than being stored in
+// the repo. Vite will inline the value at build time, so the value still
+// cannot be considered truly secret in a browser-only app. For real secret
+// protection, the request should be proxied through a backend or serverless
+// function and the token should stay only on the server.
+const WISHES_BOT_TOKEN = import.meta.env.VITE_WISHES_BOT_TOKEN || "";
+const WISHES_CHAT_ID = import.meta.env.VITE_WISHES_CHAT_ID || "";
+const WISHES_API = WISHES_BOT_TOKEN ? `https://api.telegram.org/bot${WISHES_BOT_TOKEN}/sendMessage` : "";
 
 const wishesForm = document.getElementById("wishesForm");
 if (wishesForm) {
@@ -166,6 +255,13 @@ if (wishesForm) {
     const message = wishMessageEl.value.trim();
     if (!name || !message) {
       wishesForm.reportValidity();
+      return;
+    }
+
+    if (!WISHES_BOT_TOKEN || !WISHES_CHAT_ID || !WISHES_API) {
+      wishStatusEl.className = "alert alert-danger";
+      wishStatusEl.textContent = "The wishes form is not configured yet. Please add the Telegram bot credentials.";
+      wishStatusEl.classList.remove("d-none");
       return;
     }
 
