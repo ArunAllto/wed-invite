@@ -412,9 +412,15 @@
   font-size: calc(100cqw / 1440); // 1em === 1 design px
 }
 
-// One positioned layer. Coordinates ride in custom properties so the Figma
-// numbers stay visible next to each image in the markup:
-//   style="--l:913; --t:86; --w:629; --h:756"
+// One positioned layer. Coordinates ride in custom properties — `--l`/`--t`
+// for the Figma x/y, `--w`/`--h` for its size — set per layer in the
+// "layer coordinates" blocks further down this file.
+//
+// They live here rather than in `style` attributes on the markup. Inline
+// custom properties outrank every stylesheet rule, so while the numbers were
+// in the HTML no media query could reposition a layer without `!important`
+// on every single declaration — which is exactly what the responsive hero
+// below used to need.
 .fig__l {
   position: absolute;
   // The coordinate maths below is in `em`, so the element must not carry a
@@ -422,14 +428,15 @@
   // rescale every offset. Inheriting keeps 1em === 1 design px.
   font-size: inherit;
   left: calc(var(--l, 0) * 1em);
-  top: calc(var(--t, 0) * 1em);
+  top: calc(var(--t, 1) * 0.9em);
   width: calc(var(--w) * 1em);
   height: calc(var(--h) * 1em);
   margin: 0;
   // `--flip:-1` mirrors a layer, which the design uses to reuse one export on
-  // both sides of the composition. `--py` is the parallax offset written by
-  // main.js — it composes here rather than in its own rule so setting one
-  // can't wipe out the other.
+  // both sides of the composition. `--py` is this layer's parallax offset —
+  // it composes here rather than in its own rule so setting one can't wipe
+  // out the other. Group wrappers use `--gy` instead, so their offset is not
+  // inherited and re-applied here on top of their own transform.
   transform: translate3d(0, var(--py, 0px), 0) scaleX(var(--flip, 1));
 }
 
@@ -532,15 +539,32 @@ img.fig__l {
   transform: translateY(calc((1 - var(--q)) * 40em));
 }
 
-// The couple, the bloom and the lotus bed travel further than the plane they
-// ride on — that differential is what separates them from the temple behind.
+// Depth. Every layer rides the front plane's own 40em rise; `--py` is the
+// extra travel each one adds on top, and it is that differential — not the
+// plane's movement — that reads as depth. Nearer things must always travel
+// further, so the order here is fixed even if the amounts are tuned:
+//
+//   framing (pinned to the plane) < temple < couple < lotus bed
+//
+// The temple group gets its own travel so the backdrop is not static behind
+// the couple. The peacock stands in *front* of the gopuram, so it has to move
+// at least as much — leaving it pinned while the temple behind it slid made
+// the depth read backwards.
+.hl--gopuram,
+.hl--peacock { --py: calc((1 - var(--q)) * 16em); }
 .hl--couple,
-.hl--glow { --py: calc((1 - var(--q)) * 14em); }
-.hl-bed { --py: calc((1 - var(--q)) * 22em); }
+.hl--glow { --py: calc((1 - var(--q)) * 34em); }
+.hl-bed { --gy: calc((1 - var(--q)) * 44em); }
 
 // Wrappers standing in for a single layer, so the eight lotuses (and the side
 // framing) can be moved, scaled or hidden as one unit per breakpoint.
 // `font-size: inherit` keeps their children on the artboard's own coordinates.
+//
+// Group travel is `--gy`, deliberately *not* `--py`. Custom properties
+// inherit, so a `--py` set here would also be read by every `.fig__l` child's
+// own transform and applied a second time — the group offset landed twice and
+// each lotus actually travelled double whatever this said. A separate name
+// nothing downstream reads keeps the number here honest.
 .hl-frame,
 .hl-bed {
   position: absolute;
@@ -549,16 +573,50 @@ img.fig__l {
   width: 1440em;
   height: 800em;
   font-size: inherit;
-  transform: translate3d(0, var(--py, 0px), 0);
+  transform: translate3d(0, var(--gy, 0px), 0);
 }
 
-// The bloom strengthens as the couple arrive under it. The floor is 0.6 rather
-// than something lower because this multiplies with the band's own fade-in
-// below 1200px — at 0.25 the two together left it effectively invisible on
-// load.
-.hl--glow { opacity: calc(.6 + .4 * var(--q)); }
+// The bloom sits at full strength from the start. It used to ramp up with the
+// scroll (`calc(.6 + .4 * var(--q))`), but the hero is deliberately free of
+// fades now, so its opacity is left alone.
 
 .fig-scrim { background: rgba($black, .25); }
+
+// ── Hero: layer coordinates ───────────────────────────────────────────────
+// Each layer's placement on the 1440x800 artboard, straight from Figma:
+// `--l`/`--t` are its x/y, `--w`/`--h` its size, `--flip: -1` mirrors it
+// (the design reuses one export on both sides of the composition).
+//
+// These are the `lg`-and-up values. The narrow-screen recomposition further
+// down overrides them by simply restating the ones it changes.
+.hl--bg,
+.hl--scrim  { --l: 0;       --t: 0;      --w: 1440;    --h: 800; }
+.hl--sky    { --l: 0;       --t: -81;    --w: 1440;    --h: 962; }
+
+// Side framing
+.hl--pillar-l { --l: 40;    --t: 46;     --w: 254;     --h: 468;  --flip: -1; }
+.hl--banana-l { --l: -20;   --t: -110;     --w: 187;     --h: 954;  --flip: -1; }
+.hl--leaves-l { --l: -91;   --t: 723;    --w: 343;     --h: 184;  --flip: -1; }
+.hl--leaves-r { --l: 1168;  --t: 723;    --w: 306;     --h: 164; }
+.hl--flower-a { --l: 489;   --t: 96;     --w: 73;      --h: 56; }
+.hl--flower-b { --l: 1338;  --t: 174;    --w: 73;      --h: 56; }
+.hl--pillar-r { --l: 1219;  --t: 273;    --w: 221;     --h: 407; }
+
+// Temple, peacock, couple and the bloom above them
+.hl--gopuram  { --l: 913;   --t: 86;     --w: 629;     --h: 756; }
+.hl--peacock  { --l: 945;   --t: 468;    --w: 376;     --h: 403;  --flip: -1; }
+.hl--couple   { --l: 65;    --t: 187;    --w: 641;     --h: 711; }
+.hl--glow     { --l: 162;   --t: 111;    --w: 484;     --h: 415; filter:blur(14em) }
+
+// The eight lotuses of the foreground bed, in markup order
+.hl--lotus-1 { --l: 233.64; --t: 703;    --w: 183.836; --h: 208.768; --flip: -1; }
+.hl--lotus-2 { --l: 463.14; --t: 703;    --w: 144.997; --h: 164.661; }
+.hl--lotus-3 { --l: 101;    --t: 710.9;  --w: 144.997; --h: 164.661; }
+.hl--lotus-4 { --l: 554.52; --t: 767.22; --w: 144.997; --h: 164.661; --flip: -1; }
+.hl--lotus-5 { --l: 662.82; --t: 786.48; --w: 124.138; --h: 140.973; }
+.hl--lotus-6 { --l: 745.67; --t: 771.61; --w: 110.655; --h: 125.662; --flip: -1; }
+.hl--lotus-7 { --l: 361.6;  --t: 733.46; --w: 144.997; --h: 164.661; }
+.hl--lotus-8 { --l: 190.62; --t: 758.28; --w: 110.655; --h: 125.662; }
 
 // The design's soft light bloom.
 //
@@ -572,7 +630,7 @@ img.fig__l {
 // mode stays because it still adds warmth over the artwork it *can* reach
 // (the couple, the venue photos), but nothing depends on it any more.
 .fig-glow {
-  filter: blur(9.15em);
+  // filter: blur(9.15em);
   mix-blend-mode: screen;
   pointer-events: none;
 }
@@ -592,10 +650,11 @@ img.fig__l {
   padding: 0 1.5rem;
   color: $brown-ink;
   pointer-events: none;
-  // Fades out over the first half of the scroll, as the temple closes over it.
-  opacity: clamp(0, calc(1.15 - var(--p) * 2.3), 1);
+  // No fade: the wording stays fully opaque and simply drifts up, passing
+  // behind the front plane (z-index 3) as that rises over it. The stacking
+  // order alone is what takes it out of view.
   transform: translateY(calc(var(--p) * -6cqh));
-  will-change: opacity, transform;
+  will-change: transform;
 }
 
 // The design's text column isn't centred on the artboard — it sits right of
@@ -695,7 +754,7 @@ img.fig__l {
     // into it — which collapsed the artwork band to zero height.
     aspect-ratio: auto;
     height: auto;
-    min-height: 30rem;
+    min-height: 99vh;
     container-type: inline-size;
   }
 
@@ -725,7 +784,6 @@ img.fig__l {
     justify-content: flex-start;
     padding: clamp(2.5rem, 8vw, 5rem) 1.5rem clamp(1.5rem, 5vw, 3rem);
     transform: none;
-    opacity: 1;
   }
 
   .hero-name { font-size: clamp(2.75rem, 11vw, 6rem); }
@@ -756,7 +814,8 @@ img.fig__l {
     // leaves — framing the design already bleeds off-canvas — for a usefully
     // larger temple and couple on a narrow screen.
     font-size: calc(100cqw / var(--fig-ref, 1440));
-    // Drifts up, grows and fades in as it arrives.
+    // Drifts up and grows as it arrives — no fade; it is fully opaque
+    // throughout.
     //
     // The travel is a percentage of the band's own height, not artboard `em`:
     // in artboard units the same distance is 60px on a wide tablet but 15px on
@@ -769,7 +828,6 @@ img.fig__l {
     transform:
       translateY(calc((1 - var(--q)) * 9%))
       scale(calc(.94 + .06 * var(--q)));
-    opacity: calc(.55 + .45 * var(--q));
   }
 
   // Every element is back in play — the composition is only complete, and only
@@ -777,12 +835,22 @@ img.fig__l {
   .hl-frame,
   .hl-bed { display: revert; }
 
-  // Depth: each plane travels a different distance, furthest at the front.
-  // Percentages again, resolved against each layer's own height.
-  .hl-frame { --py: calc((1 - var(--q)) * 3%); }
+  // Depth: each layer travels a different distance, furthest at the front.
+  //
+  // Measured in `cqw` — a fraction of the hero's width — rather than the
+  // percentages this used to use. A percentage in `translateY` resolves
+  // against the *element's own height*, so one shared figure moved every
+  // layer by a different amount: at `5%` the full-height gopuram travelled
+  // 24px while the peacock standing in front of it managed 7.7px, which reads
+  // as the depth being back to front. `cqw` is the same length for every
+  // layer, so these numbers mean what they say. `em` would be uniform too but
+  // is tied to the artboard, and so shrinks to almost nothing on a phone.
+  .hl-frame { --gy: calc((1 - var(--q)) * 1cqw); }
+  .hl--gopuram { --py: calc((1 - var(--q)) * 4.5cqw); }
+  .hl--peacock{ --py: calc((1 - var(--q)) * 5cqw); }
   .hl--couple,
-  .hl--glow { --py: calc((1 - var(--q)) * 6%); }
-  .hl-bed { --py: calc((1 - var(--q)) * 9%); }
+  .hl--glow { --py: calc((1 - var(--q)) * 5cqw); }
+  .hl-bed { --gy: calc((1.3 - var(--q)) * 7cqw); }
 }
 
 // The narrower the screen, the tighter the crop — a full-width 1440
@@ -814,10 +882,6 @@ img.fig__l {
 // in front — while the side framing and the lotus bed carry on filling the
 // edges and the base, so the band still spans the full width.
 //
-// `!important` is unavoidable: these coordinates live in inline `style`
-// attributes, which is what keeps them legible beside each layer in the
-// markup, and nothing in a stylesheet outranks an inline custom property.
-//
 // Heights follow each source's own aspect ratio, and the vertical positions
 // seat everything on a common baseline near the artboard's foot — the couple
 // deliberately overhanging it, as the design does.
@@ -826,26 +890,14 @@ img.fig__l {
   // so the temple and couple overhang its base and get cropped there — which
   // is what gives them presence on a small screen.
   //
-  // They override the inline coordinates rather than replacing them, which is
-  // the important part: the inline values still drive `lg` and up, where the
-  // Figma placement applies. Changing those to resize the artwork here would
-  // silently resize it on desktop too.
-  .hl--gopuram {
-    --l: 395 !important; --t: 29 !important;
-    --w: 850 !important; --h: 981 !important;
-  }
-  .hl--peacock {
-    --l: 520 !important; --t: 391 !important;
-    --w: 400 !important; --h: 429 !important;
-  }
-  .hl--couple {
-    --l: 370 !important; --t: 104 !important;
-    --w: 800 !important; --h: 876 !important;
-  }
-  .hl--glow {
-    --l: 460 !important; --t: 150 !important;
-    --w: 520 !important; --h: 446 !important;
-  }
+  // Only the four layers being recomposed are restated; the `lg`-and-up
+  // coordinates above still drive every other layer, and still drive these
+  // four on wide screens, where the Figma placement applies.
+  .hl--gopuram { --l: 275; --t: -331;  --w: 1200; --h: 1341; }
+  .hl--peacock { --l: 180; --t: 391; --w: 400;  --h: 429; }
+  .hl--couple  { --l: 370; --t: 44; --w: 800;  --h: 876; }
+  // filter: blur(9.15em);
+  .hl--glow    { --l: 520; --t: 120; --w: 520;  --h: 446; filter: blur(9em); }
 }
 
 // ── Quote banner ──────────────────────────────────────────────────────────
@@ -855,6 +907,16 @@ img.fig__l {
 // re-typeset.
 .fig--quote { aspect-ratio: 1440 / 455; }
 .fig--quote .fig__stage { height: 455em; }
+
+// Layer coordinates on the 1440x455 artboard.
+.ql--bg,
+.ql--hand    { --l: 0;   --t: 0;       --w: 1440; --h: 455; }
+.ql--glow    { --l: 664; --t: -351.75; --w: 822;  --h: 706; }
+.ql--collage { --l: 75;  --t: 58.25;   --w: 451;  --h: 338.8; }
+
+// The design gives the quote its own text box rather than letting it
+// shrink-wrap, so the two lines break where Figma breaks them.
+.quote-copy { --l: 652; --t: 180.25; width: 642em; }
 
 .quote-text {
   font-size: 39em;
@@ -951,6 +1013,16 @@ img.fig__l {
 .countdown-timer {
   padding-inline: 1.5rem;
 }
+
+// Layer coordinates for the band's decoration, on the same 1440 artboard.
+.cd--medallion-a { --l: 208;    --t: 12;  --w: 241.37;  --h: 243.5; }
+.cd--medallion-b { --l: 40;     --t: 103; --w: 292.5;   --h: 295.2; }
+.cd--photo-round { --l: 1193;   --t: -16; --w: 291.509; --h: 291.509; }
+.cd--medallion-c { --l: 1042;   --t: 116; --w: 362.5;   --h: 365.9; }
+.cd--flower-a    { --l: 274;    --t: 181; --w: 76;      --h: 75; }
+.cd--flower-b    { --l: 29;     --t: 277; --w: 93;      --h: 93; }
+.cd--leaf        { --l: 334.58; --t: 22;  --w: 113.588; --h: 95.754; }
+.countdown-glow  { --l: 1165;   --t: 61;  --w: 302;     --h: 259; }
 
 .countdown-header {
   position: relative;

@@ -289,14 +289,41 @@ if (weddingSong) {
     updateSongControls();
   });
 
-  // Autoplay is deliberately OFF. There used to be an autoplay gate here:
-  // the wishes modal was opened on every load purely to harvest the user
-  // gesture that browsers require before audio may start, and dismissing it
-  // (or sending a wish) kicked off playback, with a fallback `canplay`
-  // attempt for visitors whose browser already trusted the site. All of
-  // that is removed — the song now starts only from the inline player's
-  // play button or the floating one, both wired up above. Re-enabling
-  // autoplay means restoring that gate; nothing else here needs to change.
+  function playSong() {
+    if (!weddingSong.paused) return;
+
+    weddingSong.play().then(() => {
+      if (songStatus) songStatus.textContent = "Now playing";
+      updateSongControls();
+    }).catch(() => {
+      if (songStatus) songStatus.textContent = "Tap play to start the song";
+    });
+  }
+
+  // Autoplay gate. Browsers refuse to start audio with sound until the
+  // visitor has interacted with the page, and nothing the page does by
+  // itself counts — so the wishes modal is opened on every load to collect
+  // that interaction. Dismissing it (the × button, clicking the backdrop,
+  // Esc, or the "Enter Site" button) all funnel through hidden.bs.modal,
+  // and each of those is a real user gesture, which is what unlocks
+  // playback. Sending a wish leaves the modal open, so that button starts
+  // the song directly instead.
+  //
+  // The gesture permission a browser grants this way is "sticky": it lasts
+  // for the life of the page, so starting playback after the modal's close
+  // animation finishes is still allowed.
+  const wishesModalEl = document.getElementById("wishesModal");
+  if (wishesModalEl) {
+    bootstrap.Modal.getOrCreateInstance(wishesModalEl).show();
+    wishesModalEl.addEventListener("hidden.bs.modal", playSong);
+    document.getElementById("wishSubmitBtn")?.addEventListener("click", playSong);
+  }
+
+  // Still worth one unprompted attempt: browsers make an exception for
+  // sites the visitor uses often, so for those guests the song starts
+  // immediately rather than waiting for the modal. Silently ignored when
+  // refused, since the modal gate above is the real path.
+  weddingSong.addEventListener("canplay", playSong, { once: true });
 }
 
 // "Send Us Wishes" popup posts to our own serverless function, which is what
