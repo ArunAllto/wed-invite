@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Gloock&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400..800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Gloock&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400..800&family=Montserrat:wght@400;700&display=swap"
     rel="stylesheet"
   />
   <script type="module" src="/src/main.js"></script>
@@ -39,294 +39,332 @@
   </div>
 
   <!-- Header -->
-  <header class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
-    <div class="container">
-      <a class="navbar-brand fw-bold font-instrument-serif fs-3 text-primary d-flex align-items-center gap-1" href="#hero">A <span class="fs-6">♡</span> A</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu"
-        aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navMenu">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-lg-2">
-          <li class="nav-item"><a class="nav-link active" href="#hero">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="#our-story">Our Story</a></li>
-          <li class="nav-item"><a class="nav-link" href="#wedding-events">Events</a></li>
-          <li class="nav-item"><a class="nav-link" href="#venues">Venues</a></li>
-          <li class="nav-item"><a class="nav-link" href="#our-moments">Moments</a></li>
-          <li class="nav-item"><a class="nav-link" href="#rsvp">RSVP</a></li>
-        </ul>
-        <button type="button" class="btn btn-primary rounded-pill ms-lg-3 js-attendance-btn">✓ Confirm Attendance</button>
-      </div>
+  <header class="site-nav" id="siteNav">
+    <div class="site-nav__inner">
+      <a class="site-nav__logo" href="#hero">
+        A
+        <img src="/images/figma/ico-heart-off.svg" alt="" />
+        A
+      </a>
+
+      <button class="site-nav__toggle" type="button" id="navToggle" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">☰</button>
+
+      <ul class="site-nav__links" id="navMenu">
+        <li><a class="site-nav__link is-active" href="#hero">Home</a></li>
+        <li><a class="site-nav__link" href="#our-story">Our Story</a></li>
+        <li><a class="site-nav__link" href="#wedding-events">Events</a></li>
+        <li><a class="site-nav__link" href="#venues">Venues</a></li>
+        <li><a class="site-nav__link" href="#our-moments">Moments</a></li>
+        <li><a class="site-nav__link" href="#rsvp">RSVP</a></li>
+      </ul>
+
+      <a class="site-nav__cta" href="#share-our-joy">
+        Share Love
+        <img src="/images/figma/ico-heart.svg" alt="" />
+      </a>
     </div>
   </header>
 
   <main>
 
-    <!-- Hero -->
-    <section id="hero" class="position-relative text-white">
-      <img
-        src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='1000'%3E%3Crect width='1600' height='600' fill='%23d9b878'/%3E%3Crect y='600' width='1600' height='400' fill='%233c1024'/%3E%3C/svg%3E"
-        class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
-        alt="Arun and Aswathy, with a temple gopuram in the background"
-      />
-      <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-25"></div>
-      <div class="container position-relative z-1 py-5 py-lg-6">
-        <div class="row justify-content-center text-center">
-          <div class="col-lg-8 py-5">
-            <p class="text-uppercase small fw-bold text-info mb-1">Together with our families</p>
-            <p class="font-instrument-serif fs-4 text-info mb-4">We invite you to celebrate our wedding</p>
-            <h1 class="font-gloock display-3 mb-4">
-              <span class="d-block text-gradient-teal">Arun</span>
-              <span class="d-block fs-2">&amp;</span>
-              <span class="d-block text-gradient-teal">Aswathy</span>
-            </h1>
-            <p class="badge bg-white text-primary fs-6 px-3 py-2 mb-2">📅 12<sup>th</sup> September 2026</p>
-            <p class="mb-3">📍 Chennai, Tamil Nadu</p>
-            <p class="fs-6 mb-0">Two Hearts. One Journey. Forever.</p>
+    <!-- Hero — the 1440x800 Figma artboard, split into two planes so the
+         wording can sit *between* them: the sky behind it, the temple and
+         couple in front. `--l/--t/--w/--h` are the design's own pixel
+         coordinates; the scene's scroll choreography is driven entirely from
+         the `--p` progress variable (see .fig--hero in _custom.scss). -->
+    <section id="hero" class="fig fig--hero">
+
+      <!-- Back plane: sky wash. Zooms out as the page scrolls. -->
+      <div class="fig__stage fig__stage--sky">
+        <img class="fig__l hl--bg" style="--l:0;--t:0;--w:1440;--h:800" src="/images/figma/hero-bg.webp" alt="" />
+        <div class="fig__l fig-scrim" style="--l:0;--t:0;--w:1440;--h:800"></div>
+        <img class="fig__l hl--sky" style="--l:0;--t:-81;--w:1440;--h:962" src="/images/figma/hero-sky.webp" alt="" />
+      </div>
+
+      <!-- Invitation wording. Sits above the sky but below the temple, so as
+           the front plane rises it passes behind it and fades. -->
+      <div class="hero-copy">
+        <p class="hero-eyebrow">Together with our families</p>
+        <p class="hero-invite">We invite you to celebrate our wedding</p>
+
+        <h1 class="hero-names-block">
+          <span class="hero-name text-gradient-teal">Arun</span>
+          <span class="hero-amp">&amp;</span>
+          <span class="hero-name text-gradient-teal">Aswathy</span>
+        </h1>
+
+        <p class="hero-meta">
+          <img src="/images/figma/icon-calendar.svg" alt="" />
+          12th September 2026
+        </p>
+        <p class="hero-meta">
+          <img src="/images/figma/icon-map-pin.svg" alt="" />
+          Chennai, Tamil Nadu
+        </p>
+        <div class="hero-rule"></div>
+        <p class="hero-tagline">Two Hearts. One Journey. Forever.</p>
+      </div>
+
+      <!-- Front plane: everything solid. Rises into place as the page scrolls. -->
+      <div class="fig__stage fig__stage--front">
+
+        <!-- Side framing — carved pillars, banana leaves, scattered blooms.
+             Grouped so it can be moved or dropped as one unit per breakpoint. -->
+        <div class="hl-frame">
+          <img class="fig__l hl--pillar-l" style="--l:13;--t:46;--w:254;--h:468;--flip:-1" src="/images/figma/hero-pillar.webp" alt="" />
+          <img class="fig__l hl--banana-l" style="--l:-20;--t:-9;--w:187;--h:954;--flip:-1" src="/images/figma/hero-banana-left.webp" alt="" />
+          <img class="fig__l hl--leaves-l" style="--l:-91;--t:621;--w:343;--h:184;--flip:-1" src="/images/figma/hero-leaves.webp" alt="" />
+          <img class="fig__l hl--leaves-r" style="--l:1168;--t:653;--w:306;--h:164" src="/images/figma/hero-leaves.webp" alt="" />
+          <img class="fig__l hl--flower-a" style="--l:489;--t:96;--w:73;--h:56" src="/images/figma/hero-flower-pink.webp" alt="" />
+          <img class="fig__l hl--flower-b" style="--l:1338;--t:174;--w:73;--h:56" src="/images/figma/hero-flower-pink.webp" alt="" />
+          <img class="fig__l hl--pillar-r" style="--l:1219;--t:273;--w:221;--h:407" src="/images/figma/hero-pillar.webp" alt="" />
+        </div>
+
+        <!-- Backdrop of this plane: the gopuram and the peacock -->
+        <img class="fig__l hl--gopuram" style="--l:913;--t:86;--w:629;--h:756" src="/images/figma/hero-gopuram.webp" alt="" />
+        <img class="fig__l hl--peacock" style="--l:945;--t:468;--w:376;--h:403;--flip:-1" src="/images/figma/hero-peacock.webp" alt="" />
+
+        <!-- The couple, in front of the temple -->
+        <img class="fig__l hl--couple" style="--l:65;--t:187;--w:641;--h:711" src="/images/figma/hero-couple.webp" alt="Arun and Aswathy in wedding garlands" />
+
+        <!-- Foreground lotus bed, grouped so it can be recentred on a phone -->
+        <div class="hl-bed">
+          <img class="fig__l hl--lotus" style="--l:233.64;--t:703;--w:183.836;--h:208.768;--flip:-1" src="/images/figma/hero-lotus.webp" alt="" />
+          <img class="fig__l hl--lotus" style="--l:463.14;--t:703;--w:144.997;--h:164.661" src="/images/figma/hero-lotus.webp" alt="" />
+          <img class="fig__l hl--lotus" style="--l:101;--t:710.9;--w:144.997;--h:164.661" src="/images/figma/hero-lotus.webp" alt="" />
+          <img class="fig__l hl--lotus" style="--l:554.52;--t:767.22;--w:144.997;--h:164.661;--flip:-1" src="/images/figma/hero-lotus.webp" alt="" />
+          <img class="fig__l hl--lotus" style="--l:662.82;--t:786.48;--w:124.138;--h:140.973" src="/images/figma/hero-lotus.webp" alt="" />
+          <img class="fig__l hl--lotus" style="--l:745.67;--t:771.61;--w:110.655;--h:125.662;--flip:-1" src="/images/figma/hero-lotus.webp" alt="" />
+          <img class="fig__l hl--lotus" style="--l:361.6;--t:733.46;--w:144.997;--h:164.661" src="/images/figma/hero-lotus.webp" alt="" />
+          <img class="fig__l hl--lotus" style="--l:190.62;--t:758.28;--w:110.655;--h:125.662" src="/images/figma/hero-lotus.webp" alt="" />
+        </div>
+
+        <!-- Lighting bloom, on top as the highlight -->
+        <img class="fig__l fig-glow hl--glow" style="--l:192;--t:86;--w:484;--h:415" src="/images/figma/hero-glow.webp" alt="" />
+      </div>
+    </section>
+
+    <!-- Our Story — 1440x680 band from the design: two columns with an 80px
+         gap, plus the floral sprays and song card placed over it. -->
+    <section id="our-story" class="story-section position-relative overflow-hidden">
+      <div class="story-inner">
+        <div class="story-text">
+          <p class="story-eyebrow">Our Journey</p>
+          <h2 class="story-title font-gloock text-gradient-teal">Our Story</h2>
+          <p class="story-body">
+            From a simple "hello" to a lifetime together, our journey is filled with
+            love, laughter, and endless blessings. We found our path converging in
+            Chennai, sharing a deep respect for our heritage, our families, and a
+            common dream of building a beautiful future together.
+          </p>
+          <p class="story-body">
+            As we prepare to take the sacred seven vows of marriage, we look back
+            with immense gratitude at all the moments that brought us here. We
+            cannot wait to begin this new chapter with you by our side.
+          </p>
+        </div>
+
+        <img class="story-floral story-floral--left" src="/images/figma/story-floral.webp" alt="" />
+        <img class="story-floral story-floral--right" src="/images/figma/story-floral.webp" alt="" />
+
+        <!-- The arched photo and the song card that overlaps its top-left
+             corner. They share a wrapper so the card can be positioned as a
+             percentage of the photo — that keeps the design's placement at
+             every screen size instead of relocating on small screens. -->
+        <div class="story-figure-wrap">
+          <div class="story-figure">
+            <img class="story-figure__photo" src="/images/figma/story-photo.webp" alt="Arun and Aswathy exchanging roses" />
+            <img class="story-figure__glow" src="/images/figma/hero-glow.webp" alt="" />
+          </div>
+
+          <div class="song-slot">
+          <div class="song-card" id="songPlayer">
+            <div class="song-card__wash" aria-hidden="true">
+              <img src="/images/figma/player-art.webp" alt="" />
+            </div>
+    
+            <div class="song-card__row">
+              <img class="song-card__art" src="/images/figma/player-art.webp" alt="Naan Pizhai song artwork" />
+              <div class="song-card__meta">
+                <p class="song-card__title">Naan Pizhai (From "Kaathuvaakula Rendu Kaadhal")</p>
+                <p class="song-card__artist">Anirudh, Vignesh Shivan</p>
+              </div>
+              <img class="song-card__rt" src="/images/figma/ico-rt.svg" alt="" />
+            </div>
+    
+            <div>
+              <div class="song-card__seek">
+                <input class="song-card__range" id="songProgress" type="range" min="0" max="0" value="0" step="1" aria-label="Song progress" />
+                <div class="song-card__times">
+                  <span id="songCurrentTime">0:00</span>
+                  <span id="songDuration">0:00</span>
+                </div>
+              </div>
+              <div class="song-card__buttons">
+                <img class="song-card__btn song-card__deco" src="/images/figma/ico-shuffle.svg" alt="" />
+                <button class="song-card__btn" type="button" id="songBack" aria-label="Restart song">
+                  <img src="/images/figma/ico-back.svg" alt="" />
+                </button>
+                <button class="song-card__play" type="button" id="songPlay" aria-label="Play song" aria-pressed="false">
+                  <img src="/images/figma/ico-play.svg" alt="" />
+                </button>
+                <button class="song-card__btn" type="button" id="songForward" aria-label="Skip ahead 10 seconds">
+                  <img src="/images/figma/ico-forward.svg" alt="" />
+                </button>
+                <img class="song-card__btn song-card__deco" src="/images/figma/ico-loop.svg" alt="" />
+              </div>
+            </div>
+            <p class="visually-hidden" id="songStatus" role="status">Press play to listen</p>
+            <!-- <audio id="weddingSong" preload="metadata" ></audio> -->
+          </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Our Story -->
-    <section id="our-story" class="py-5 py-lg-6 bg-light">
-      <div class="container">
-        <div class="row align-items-center g-5">
-          <div class="col-lg-6 text-center text-lg-start">
-            <p class="text-uppercase small fw-bold text-warning mb-2">Our Journey</p>
-            <h2 class="font-gloock text-gradient-teal mb-3">Our Story</h2>
-            <p class="text-body-secondary lh-lg mb-3">
-              From a simple "hello" to a lifetime together, our journey is filled with
-              love, laughter, and endless blessings. We found our path converging in
-              Chennai, sharing a deep respect for our heritage, our families, and a
-              common dream of building a beautiful future together.
-            </p>
-            <p class="text-body-secondary lh-lg mb-4">
-              As we prepare to take the sacred seven vows of marriage, we look back
-              with immense gratitude at all the moments that brought us here. We
-              cannot wait to begin this new chapter with you by our side.
-            </p>
-            <a href="#the-big-day" class="btn btn-primary">Know More →</a>
-          </div>
-          <div class="col-lg-6">
-            <div class="song-player shadow" id="songPlayer">
-              <img
-                src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23e3c9a0'/%3E%3C/svg%3E"
-                class="song-player__photo"
-                alt="Arun and Aswathy together"
-              />
-              <div class="song-player__wash"></div>
-              <div class="song-player__content">
-                <div class="d-flex align-items-center gap-3 mb-4">
-                  <div class="song-player__cover">
-                    <img src="/images/naan-pizhai.jpg" alt="Naan Pizhai song artwork" />
-                  </div>
-                  <div class="min-w-0">
-                    <p class="song-player__eyebrow mb-1">Our wedding song</p>
-                    <h3 class="song-player__title text-truncate mb-0">Naan Pizhai</h3>
-                    <p class="song-player__artist text-truncate mb-0">Anirudh, Vignesh Shivan</p>
-                  </div>
-                </div>
-                <div class="song-player__timeline mb-4">
-                  <div class="d-flex justify-content-between small mb-2">
-                    <span id="songCurrentTime">0:00</span>
-                    <span id="songDuration">0:00</span>
-                  </div>
-                  <input class="song-player__range" id="songProgress" type="range" min="0" max="0" value="0" step="1" aria-label="Song progress" />
-                </div>
-                <div class="d-flex align-items-center justify-content-center gap-4">
-                  <button class="song-player__skip" type="button" id="songBack" aria-label="Restart song">↶</button>
-                  <button class="song-player__play" type="button" id="songPlay" aria-label="Play song" aria-pressed="false">
-                    <span class="song-player__play-icon" aria-hidden="true">▶</span>
-                  </button>
-                  <button class="song-player__skip" type="button" id="songForward" aria-label="Skip ahead 10 seconds">↷</button>
-                </div>
-                <p class="song-player__status text-center mb-0 mt-3" id="songStatus" role="status">Press play to listen</p>
-              </div>
-              <audio id="weddingSong" preload="metadata" autoplay></audio>
-            </div>
-          </div>
-        </div>
+    <!-- The Big Day — live countdown. 1440x395 band; the photo medallions and
+         florals are placed at the design's own pixel coordinates via .fig-abs. -->
+    <section id="the-big-day" class="countdown-section fig-band">
+      <div class="countdown-header">
+        <h2 class="countdown-title">The Big Day</h2>
+        <p class="countdown-tagline">— Counting down to our forever —</p>
       </div>
-    </section>
 
-    <!-- The Big Day — live countdown -->
-    <section id="the-big-day" class="py-5 bg-primary text-white">
-      <div class="container">
-        <div class="row align-items-center g-4">
-          <div class="col-lg-8 mx-auto text-center">
-            <h2 class="font-gloock text-gold-light mb-2">The Big Day</h2>
-            <p class="text-white-50 text-uppercase small fw-semibold mb-4">— Counting down to our forever —</p>
-            <div class="row row-cols-4 g-2 g-md-3 justify-content-center">
-              <div class="col">
-                <div class="bg-white bg-opacity-10 border border-warning rounded-3 py-3">
-                  <div class="font-gloock fs-2 text-gold-light" id="cd-days">–</div>
-                  <div class="small text-white-50">Days</div>
-                </div>
-              </div>
-              <div class="col">
-                <div class="bg-white bg-opacity-10 border border-warning rounded-3 py-3">
-                  <div class="font-gloock fs-2 text-gold-light" id="cd-hours">–</div>
-                  <div class="small text-white-50">Hours</div>
-                </div>
-              </div>
-              <div class="col">
-                <div class="bg-white bg-opacity-10 border border-warning rounded-3 py-3">
-                  <div class="font-gloock fs-2 text-gold-light" id="cd-minutes">–</div>
-                  <div class="small text-white-50">Minutes</div>
-                </div>
-              </div>
-              <div class="col">
-                <div class="bg-white bg-opacity-10 border border-warning rounded-3 py-3">
-                  <div class="font-gloock fs-2 text-gold-light" id="cd-seconds">–</div>
-                  <div class="small text-white-50">Seconds</div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="countdown-timer">
+        <div class="countdown-card">
+          <div class="countdown-value" id="cd-days">–</div>
+          <div class="countdown-label">Days</div>
+        </div>
+        <div class="countdown-card">
+          <div class="countdown-value" id="cd-hours">–</div>
+          <div class="countdown-label">Hours</div>
+        </div>
+        <div class="countdown-card">
+          <div class="countdown-value" id="cd-minutes">–</div>
+          <div class="countdown-label">Minutes</div>
+        </div>
+        <div class="countdown-card">
+          <div class="countdown-value" id="cd-seconds">–</div>
+          <div class="countdown-label">Seconds</div>
         </div>
       </div>
+
+      <!-- Decorative photo medallions and florals bleeding off both edges -->
+      <img class="fig-abs" style="--l:208;--t:12;--w:241.37;--h:243.5" src="/images/figma/cd-medallion-a.webp" alt="" />
+      <img class="fig-abs" style="--l:40;--t:103;--w:292.5;--h:295.2" src="/images/figma/cd-medallion-b.webp" alt="" />
+      <img class="fig-abs" style="--l:1193;--t:-16;--w:291.509;--h:291.509" src="/images/figma/cd-photo-round.webp" alt="" />
+      <img class="fig-abs" style="--l:1042;--t:116;--w:362.5;--h:365.9" src="/images/figma/cd-medallion-c.webp" alt="" />
+      <img class="fig-abs" style="--l:274;--t:181;--w:76;--h:75" src="/images/figma/cd-flower-a.webp" alt="" />
+      <img class="fig-abs" style="--l:29;--t:277;--w:93;--h:93" src="/images/figma/cd-flower-b.webp" alt="" />
+      <img class="fig-abs" style="--l:334.58;--t:22;--w:113.588;--h:95.754" src="/images/figma/cd-leaf.webp" alt="" />
+      <img class="fig-abs countdown-glow" style="--l:1165;--t:61;--w:302;--h:259" src="/images/figma/cd-glow.webp" alt="" />
     </section>
 
     <!-- Wedding Events -->
-    <section id="wedding-events" class="py-5 py-lg-6">
-      <div class="container">
-        <div class="row justify-content-center text-center mb-5">
-          <div class="col-lg-7">
-            <p class="text-uppercase small fw-bold text-warning mb-2">Celebrate With Us</p>
-            <h2 class="font-gloock text-primary mb-0">Wedding Events</h2>
-          </div>
-        </div>
-        <div class="row g-4">
-          <div class="col-12 col-sm-6 col-lg-3">
-            <div class="card h-100 shadow-sm bg-danger-subtle border border-warning border-2">
-              <div class="card-body">
-                <div class="ratio ratio-4x3 rounded-3 overflow-hidden mb-3">
-                  <img
-                    src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23caa356'/%3E%3C/svg%3E"
-                    class="object-fit-cover"
-                    alt="Mylanji ceremony"
-                  />
-                </div>
-                <h5 class="card-title text-primary font-gloock text-center">Mylanji</h5>
-                <hr />
-                <p class="card-text text-body-secondary fw-semibold mb-1">📅 12 Sep 2026</p>
-                <p class="card-text text-body-secondary fw-semibold mb-1">🕐 07:00 PM</p>
-                <p class="card-text text-body-secondary fw-semibold mb-0">📍 Bride's Residence, Poovarany</p>
-              </div>
+    <section id="wedding-events" class="events-section">
+      <div class="sec-header">
+        <p class="sec-eyebrow">Celebrate With Us</p>
+        <h2 class="sec-title">Wedding Events</h2>
+      </div>
+
+      <div class="events-grid">
+        <article class="event-card event-card--mylanji">
+          <img class="event-card__image" src="/images/figma/event-mylanji.webp" alt="Mylanji ceremony" />
+          <div class="event-card__details">
+            <h3 class="event-card__title">Mylanji</h3>
+            <div class="event-card__rule"></div>
+            <div class="event-card__meta">
+              <p class="event-card__row"><img src="/images/figma/ico-ev-calendar.svg" alt="" /><span>12 Sep 2026</span></p>
+              <p class="event-card__row"><img src="/images/figma/ico-ev-clock.svg" alt="" /><span>07:00 PM</span></p>
+              <p class="event-card__row"><img src="/images/figma/ico-ev-mappin.svg" alt="" /><span>Bride's Residence, Poovarany</span></p>
             </div>
           </div>
-          <div class="col-12 col-sm-6 col-lg-3">
-            <div class="card h-100 shadow-sm bg-success-subtle border border-warning border-2">
-              <div class="card-body">
-                <div class="ratio ratio-4x3 rounded-3 overflow-hidden mb-3">
-                  <img
-                    src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%238a1538'/%3E%3C/svg%3E"
-                    class="object-fit-cover"
-                    alt="Muhurtham ceremony"
-                  />
-                </div>
-                <h5 class="card-title text-primary font-gloock text-center">Muhurtham</h5>
-                <hr />
-                <p class="card-text text-body-secondary fw-semibold mb-1">📅 13 Sep 2026</p>
-                <p class="card-text text-body-secondary fw-semibold mb-1">🕐 10:15 AM - 10:40 AM</p>
-                <p class="card-text text-body-secondary fw-semibold mb-0">📍 Sri Mahadeva Temple, Poovarany</p>
-              </div>
+        </article>
+
+        <article class="event-card event-card--muhurtham">
+          <img class="event-card__image" src="/images/figma/event-muhurtham.webp" alt="Muhurtham ceremony" />
+          <div class="event-card__details">
+            <h3 class="event-card__title">Muhurtham</h3>
+            <div class="event-card__rule"></div>
+            <div class="event-card__meta">
+              <p class="event-card__row"><img src="/images/figma/ico-ev-calendar.svg" alt="" /><span>13 Sep 2026</span></p>
+              <p class="event-card__row"><img src="/images/figma/ico-ev-clock.svg" alt="" /><span>10:15 AM - 10:40AM</span></p>
+              <p class="event-card__row"><img src="/images/figma/ico-ev-mappin.svg" alt="" /><span>Sri Mahadeva Temple, Poovarany</span></p>
             </div>
           </div>
-          <div class="col-12 col-sm-6 col-lg-3">
-            <div class="card h-100 shadow-sm bg-warning-subtle border border-warning border-2">
-              <div class="card-body">
-                <div class="ratio ratio-4x3 rounded-3 overflow-hidden mb-3">
-                  <img
-                    src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23e7c9c9'/%3E%3C/svg%3E"
-                    class="object-fit-cover"
-                    alt="Reception"
-                  />
-                </div>
-                <h5 class="card-title text-primary font-gloock text-center">Reception</h5>
-                <hr />
-                <p class="card-text text-body-secondary fw-semibold mb-1">📅 14 Sep 2026</p>
-                <p class="card-text text-body-secondary fw-semibold mb-1">🕐 11:00 AM</p>
-                <p class="card-text text-body-secondary fw-semibold mb-0">📍 Devadhanam, Rajapalayam</p>
-              </div>
+        </article>
+
+        <article class="event-card event-card--reception">
+          <img class="event-card__image" src="/images/figma/event-reception.webp" alt="Reception" />
+          <div class="event-card__details">
+            <h3 class="event-card__title">Reception</h3>
+            <div class="event-card__rule"></div>
+            <div class="event-card__meta">
+              <p class="event-card__row"><img src="/images/figma/ico-ev-calendar.svg" alt="" /><span>14 Sep 2026</span></p>
+              <p class="event-card__row"><img src="/images/figma/ico-ev-clock.svg" alt="" /><span>11:00 AM</span></p>
+              <p class="event-card__row"><img src="/images/figma/ico-ev-mappin.svg" alt="" /><span>Devadhanam, Rajapalayam</span></p>
             </div>
           </div>
-          <div class="col-12 col-sm-6 col-lg-3">
-            <div class="card h-100 shadow-sm bg-lavender border border-warning border-2">
-              <div class="card-body">
-                <div class="ratio ratio-4x3 rounded-3 overflow-hidden mb-3">
-                  <img
-                    src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23ded6c4'/%3E%3C/svg%3E"
-                    class="object-fit-cover"
-                    alt="Vidai send-off"
-                  />
-                </div>
-                <h5 class="card-title text-primary font-gloock text-center">Vidai</h5>
-                <hr />
-                <p class="card-text text-body-secondary fw-semibold mb-1">📅 14 Sep 2026</p>
-                <p class="card-text text-body-secondary fw-semibold mb-1">🕐 04:00 PM</p>
-                <p class="card-text text-body-secondary fw-semibold mb-0">📍 Bride's Residence, Chennai</p>
-              </div>
+        </article>
+
+        <article class="event-card event-card--vidai">
+          <img class="event-card__image" src="/images/figma/event-vidai.webp" alt="Vidai send-off" />
+          <div class="event-card__details">
+            <h3 class="event-card__title">Vidai</h3>
+            <div class="event-card__rule"></div>
+            <div class="event-card__meta">
+              <p class="event-card__row"><img src="/images/figma/ico-ev-calendar.svg" alt="" /><span>14 Sep 2026</span></p>
+              <p class="event-card__row"><img src="/images/figma/ico-ev-clock.svg" alt="" /><span>04:00 PM</span></p>
+              <p class="event-card__row"><img src="/images/figma/ico-ev-mappin.svg" alt="" /><span>Bride's Residence, Chennai</span></p>
             </div>
           </div>
-        </div>
+        </article>
       </div>
     </section>
 
     <!-- Venues -->
-    <section id="venues" class="py-5 py-lg-6 bg-secondary text-white">
-      <div class="container">
-        <div class="row justify-content-center text-center mb-5">
-          <div class="col-lg-7">
-            <p class="text-uppercase small fw-bold text-gold-light mb-2">Where to Be</p>
-            <h2 class="font-instrument-serif display-4 mb-0">Venues</h2>
+    <section id="venues" class="venues-section">
+      <img class="venues-pattern" src="/images/figma/venues-pattern.webp" alt="" />
+
+      <div class="sec-header">
+        <p class="sec-eyebrow">Where to Be</p>
+        <h2 class="sec-title">Venues</h2>
+      </div>
+
+      <div class="venues-grid">
+        <article class="venue-card">
+          <img class="venue-card__image" src="/images/figma/venue-temple.webp" alt="Poovarany Shree Mahadeva Temple" />
+          <div class="venue-card__text">
+            <p class="venue-card__eyebrow">Muhurtham Venue</p>
+            <h3 class="venue-card__title">Poovarany Shree Mahadeva Temple</h3>
+            <p class="venue-card__body">
+              Mylapore, Chennai - 600004. An iconic, majestic ancient Hindu temple
+              dedicated to Lord Shiva with breathtaking traditional Dravidian
+              architecture and serene sacred ambiance.
+            </p>
+            <a class="venue-card__map" href="#">
+              View on Map
+              <img src="/images/figma/ico-arrow-ur.svg" alt="" />
+            </a>
           </div>
-        </div>
-        <div class="row g-4 justify-content-center">
-          <div class="col-lg-6">
-            <div class="card h-100 shadow">
-              <div class="ratio ratio-16x9">
-                <img
-                  src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360'%3E%3Crect width='640' height='360' fill='%23b7c9d9'/%3E%3C/svg%3E"
-                  class="object-fit-cover"
-                  alt="Sri Mahadeva Temple"
-                />
-              </div>
-              <div class="card-body text-center">
-                <p class="text-warning fw-bold text-uppercase small mb-1">Muhurtham Venue</p>
-                <h5 class="card-title font-gloock text-primary">Poovarany Shree Mahadeva Temple</h5>
-                <p class="card-text text-body-secondary mb-3">
-                  Mylapore, Chennai – 600004. An iconic, majestic ancient Hindu temple
-                  dedicated to Lord Shiva with breathtaking traditional Dravidian
-                  architecture and serene sacred ambiance.
-                </p>
-                <a href="#" class="btn btn-warning rounded-pill">View on Map →</a>
-              </div>
-            </div>
+        </article>
+
+        <article class="venue-card">
+          <img class="venue-card__image" src="/images/figma/venue-hall.webp" alt="Perunthalaivar Kamarajar Thirumana Mandapam" />
+          <div class="venue-card__text">
+            <p class="venue-card__eyebrow">Reception Venue</p>
+            <h3 class="venue-card__title">Perunthalaivar Kamarajar Thirumana Mandapam</h3>
+            <p class="venue-card__body">
+              T. Nagar, Chennai - 600017. A beautiful, grand, luxury banquet hall
+              featuring spectacular lighting, floral design, and rich traditional
+              South Indian aesthetics for large gatherings.
+            </p>
+            <a class="venue-card__map" href="#">
+              View on Map
+              <img src="/images/figma/ico-arrow-ur.svg" alt="" />
+            </a>
           </div>
-          <div class="col-lg-6">
-            <div class="card h-100 shadow">
-              <div class="ratio ratio-16x9">
-                <img
-                  src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360'%3E%3Crect width='640' height='360' fill='%235c1a2e'/%3E%3C/svg%3E"
-                  class="object-fit-cover"
-                  alt="Perunthalaivar Kamarajar Thirumana Mandapam"
-                />
-              </div>
-              <div class="card-body text-center">
-                <p class="text-warning fw-bold text-uppercase small mb-1">Reception Venue</p>
-                <h5 class="card-title font-gloock text-primary">Perunthalaivar Kamarajar Thirumana Mandapam</h5>
-                <p class="card-text text-body-secondary mb-3">
-                  T. Nagar, Chennai – 600017. A beautiful, grand, luxury banquet hall
-                  featuring spectacular lighting, floral design, and rich traditional
-                  South Indian aesthetics for large gatherings.
-                </p>
-                <a href="#" class="btn btn-warning rounded-pill">View on Map →</a>
-              </div>
-            </div>
-          </div>
-        </div>
+        </article>
       </div>
     </section>
 
@@ -335,8 +373,8 @@
       <div class="container">
         <div class="row justify-content-center text-center mb-4">
           <div class="col-lg-7">
-            <h2 class="font-gloock text-success mb-2">Our Moments</h2>
-            <p class="text-warning fs-5 mb-0">❦</p>
+            <p class="text-uppercase small fw-bold text-warning mb-2">Memories Captured</p>
+            <h2 class="font-gloock text-success mb-0">Our Moments</h2>
           </div>
         </div>
         <div class="row g-1">
@@ -447,7 +485,7 @@
             </form>
           </div>
           <div class="modal-footer border-0 pt-0">
-            <button type="button" class="btn btn-outline-primary w-100" data-bs-dismiss="modal">Enter Site &amp; Play Music ♪</button>
+            <button type="button" class="btn btn-outline-primary w-100" data-bs-dismiss="modal">Enter Site</button>
           </div>
         </div>
       </div>
@@ -498,47 +536,77 @@
       </div>
     </div>
 
-    <!-- Quote band — wide photo background -->
-    <section class="position-relative text-white">
-      <img
-        src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='500'%3E%3Crect width='1600' height='320' fill='%23e8b876'/%3E%3Crect y='320' width='1600' height='180' fill='%232a1620'/%3E%3C/svg%3E"
-        class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
-        alt="Arun and Aswathy watching the sunset together"
-      />
-      <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-25"></div>
-      <div class="container position-relative z-1 py-5 py-lg-6 text-center">
-        <blockquote class="font-gloock display-5 mb-0">
-          <span class="d-block">"With you, every moment</span>
-          <span class="d-block">feels like magic."</span>
+    <!-- Quote banner — 1440x455 artboard reproduced layer for layer -->
+    <section class="fig fig--quote">
+      <div class="fig__stage">
+        <img class="fig__l" style="--l:0;--t:0;--w:1440;--h:455" src="/images/figma/quote-bg.webp" alt="" />
+        <img class="fig__l" style="--l:0;--t:0;--w:1440;--h:455" src="/images/figma/quote-hand.webp" alt="Arun and Aswathy holding hands" />
+        <img class="fig__l fig-glow" style="--l:664;--t:-351.75;--w:822;--h:706" src="/images/figma/quote-glow.webp" alt="" />
+        <img class="fig__l" style="--l:75;--t:58.25;--w:451;--h:338.8" src="/images/figma/quote-collage.png" alt="" />
+
+        <blockquote class="fig__t quote-copy font-gloock text-center" style="--l:652;--t:180.25;width:642em">
+          <p class="quote-text mb-0">"With you, every moment</p>
+          <p class="quote-text mb-0">feels like magic."</p>
+        </blockquote>
+      </div>
+
+      <!-- Below the artboard's width the banner wraps into two stacked
+           blocks: the collage above, the quote below. -->
+      <div class="quote-stack">
+        <img class="quote-stack__collage" src="/images/figma/quote-collage.png" alt="Arun and Aswathy, with song captions" />
+        <blockquote class="quote-stack__text">
+          "With you, every moment feels like magic."
         </blockquote>
       </div>
     </section>
 
-    <!-- RSVP -->
-    <section id="rsvp" class="py-5 py-lg-6">
-      <div class="container">
-        <div class="row justify-content-center text-center mb-5">
-          <div class="col-lg-6">
-            <p class="text-uppercase small fw-bold text-warning mb-1">Guests Confirmed</p>
-            <div class="font-gloock display-3 text-primary lh-1" id="attendance-count">–</div>
-            <p class="text-body-secondary mb-0">🎉 have confirmed their attendance so far</p>
+    <!-- RSVP + Share Our Joy -->
+    <section id="rsvp" class="rsvp-section">
+      <div class="rsvp-inner">
+        <div class="rsvp-block">
+          <div class="rsvp-block__head">
+            <h2 class="rsvp-heading">Will You Be There?</h2>
+            <p class="rsvp-body">
+              Your presence means the absolute world to us as we take this big
+              step. Please let us know if you can make it.
+            </p>
+          </div>
+          <div class="rsvp-buttons">
+            <button type="button" class="rsvp-btn rsvp-btn--solid js-attendance-btn">
+              <img src="/images/figma/ico-check.svg" alt="" />
+              Confirm Attendance
+            </button>
+            <button type="button" class="rsvp-btn rsvp-btn--outline" data-bs-toggle="modal" data-bs-target="#wishesModal">
+              <img src="/images/figma/ico-mail.svg" alt="" />
+              Send Us Wishes
+            </button>
           </div>
         </div>
-        <div class="row justify-content-center text-center">
-          <div class="col-md-8 col-lg-6">
-            <div class="card shadow-sm">
-              <div class="card-body p-4">
-                <h3 class="font-gloock text-primary mb-2">Will You Be There?</h3>
-                <p class="text-body-secondary mb-4">
-                  Your presence means the absolute world to us as we take this big
-                  step. Please let us know if you can make it.
-                </p>
-                <div class="d-flex flex-column flex-sm-row gap-2">
-                  <button type="button" class="btn btn-primary flex-fill js-attendance-btn">✓ Confirm Attendance</button>
-                  <button type="button" class="btn btn-outline-primary flex-fill" data-bs-toggle="modal" data-bs-target="#wishesModal">✉ Send Us Wishes</button>
-                </div>
-              </div>
-            </div>
+
+        <div class="share-block" id="share-our-joy">
+          <div class="share-block__head">
+            <p class="share-eyebrow">Spread the Love</p>
+            <h2 class="rsvp-heading">Share Our Joy</h2>
+            <p class="share-body">
+              Share our digital invitation or wedding page with friends and family
+              members across social media networks, or copy the link directly to
+              send via messages.
+            </p>
+          </div>
+          <div class="social-row">
+            <a class="share-icon share-icon--whatsapp js-share-link" data-share="x" href="#" target="_blank" rel="noopener" aria-label="Share on X">
+              <img src="/images/figma/ico-circle-x.svg" alt="" />
+            </a>
+            <a class="share-icon share-icon--facebook js-share-link" data-share="facebook" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook">
+              <img src="/images/figma/ico-facebook.svg" alt="" />
+            </a>
+            <a class="share-icon share-icon--instagram" href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Open Instagram">
+              <img src="/images/figma/ico-instagram.svg" alt="" />
+            </a>
+            <button type="button" class="share-copy" id="copyLinkBtn">
+              <img src="/images/figma/ico-link.svg" alt="" />
+              <span id="copyLinkLabel">Copy Link</span>
+            </button>
           </div>
         </div>
       </div>
@@ -547,16 +615,18 @@
   </main>
 
   <!-- Footer -->
-  <footer class="bg-maroon-dark text-white pt-5 pb-4 text-center">
-    <div class="container">
-      <p class="font-instrument-serif fs-1 mb-3">A <span class="fs-6">♡</span> A</p>
-      <p class="small opacity-75 mb-1">With Love</p>
-      <p class="font-gloock fs-4 mb-2">Arun &amp; Aswathy</p>
-      <p class="font-gloock text-gold-light mb-1">13.09.2026</p>
-      <p class="small opacity-50 mb-4">Pala, Kerala</p>
-      <hr class="w-25 mx-auto" />
-      <p class="small opacity-50 mb-0">Made with ♥ for our special day</p>
+  <footer class="site-footer">
+    <img class="site-footer__monogram" src="/images/figma/footer-monogram.webp" alt="Arun and Aswathy monogram" />
+
+    <div class="site-footer__names">
+      <p class="site-footer__with-love">With Love</p>
+      <p class="site-footer__couple">Arun &amp; Aswathy</p>
+      <p class="site-footer__date">13.09.2026</p>
+      <p class="site-footer__place">Pala, Kerala</p>
     </div>
+
+    <div class="site-footer__rule"></div>
+    <p class="site-footer__credit">Made with ♥ for our special day</p>
   </footer>
 
   <!-- Persistent controls: music sits above the wishes button. -->

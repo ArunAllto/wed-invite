@@ -79,54 +79,31 @@ function launchConfetti() {
   setTimeout(() => burst.remove(), 4000);
 }
 
-// Attendance counter — a total that's the same for every guest needs
-// somewhere to live, and this is a static site with no backend of its own.
-// CountAPI (countapi.xyz) has gone offline entirely (its domain no longer
-// resolves). hits.dwyl.com was tried next but never sends an
-// Access-Control-Allow-Origin header, so browsers silently block it via
-// CORS even though it works fine from a terminal (curl doesn't enforce
-// CORS — only real browsers do, which is why that failure wasn't visible
-// in testing until it ran in an actual page). This now uses
-// abacus.jasoncameron.dev, confirmed (by sending a real Origin header)
-// to return `access-control-allow-origin: *`, and it supports the same
-// get/hit split as the original CountAPI design: /get reads without
-// incrementing, /hit increments. Each device still only calls /hit once
-// (tracked via a localStorage flag), so re-clicking the same device's
-// button doesn't inflate the total; the confetti + scroll-to-RSVP
-// reaction fires on every click regardless.
+// Attendance tally. The design has no visible "Guests Confirmed" figure, so
+// nothing is rendered from this any more — the count is still recorded
+// remotely, so the running total can be read straight from the counter
+// service whenever it's wanted.
+//
+// A static site has no backend of its own, hence the third-party counter:
+// CountAPI (countapi.xyz) is gone (its domain no longer resolves), and
+// hits.dwyl.com never sends an Access-Control-Allow-Origin header, so
+// browsers block it via CORS even though it works fine from a terminal
+// (curl doesn't enforce CORS — only real browsers do, which is why that
+// failure wasn't visible until it ran in an actual page). This uses
+// abacus.jasoncameron.dev, confirmed to return `access-control-allow-origin: *`.
+// Each device only calls /hit once (tracked via a localStorage flag), so
+// re-clicking the same device's button doesn't inflate the total; the
+// confetti + scroll-to-RSVP reaction fires on every click regardless.
 const ATTENDANCE_API = "https://abacus.jasoncameron.dev";
 const ATTENDANCE_NAMESPACE = "arun-aswathy-wedding-2026";
 const ATTENDANCE_KEY = "attendance";
 const ATTENDANCE_COUNTED_FLAG = "weddingAttendanceCounted";
-// The remote counter starts from 0 and only tracks real clicks. Adding a
-// fixed baseline here makes the displayed number start at 200 without
-// needing to seed the remote counter itself (which has no "set value"
-// endpoint — only increment) — every real click still adds exactly +1
-// on top of this baseline.
-const ATTENDANCE_BASE = 200;
-
-function setAttendanceDisplay(value) {
-  const el = document.getElementById("attendance-count");
-  if (el && value != null) el.textContent = String(value);
-}
-
-async function loadAttendanceCount() {
-  try {
-    const res = await fetch(`${ATTENDANCE_API}/get/${ATTENDANCE_NAMESPACE}/${ATTENDANCE_KEY}`);
-    const data = await res.json();
-    setAttendanceDisplay((data.value ?? 0) + ATTENDANCE_BASE);
-  } catch (err) {
-    console.warn("Attendance counter unavailable:", err);
-  }
-}
 
 async function recordAttendanceOnce() {
   if (localStorage.getItem(ATTENDANCE_COUNTED_FLAG)) return;
   try {
-    const res = await fetch(`${ATTENDANCE_API}/hit/${ATTENDANCE_NAMESPACE}/${ATTENDANCE_KEY}`);
-    const data = await res.json();
+    await fetch(`${ATTENDANCE_API}/hit/${ATTENDANCE_NAMESPACE}/${ATTENDANCE_KEY}`);
     localStorage.setItem(ATTENDANCE_COUNTED_FLAG, "true");
-    setAttendanceDisplay(data.value + ATTENDANCE_BASE);
   } catch (err) {
     console.warn("Could not record attendance:", err);
   }
@@ -140,7 +117,106 @@ document.querySelectorAll(".js-attendance-btn").forEach((button) => {
   });
 });
 
-loadAttendanceCount();
+// Hero scene. All this does is publish the hero's scroll progress as `--p`
+// (0 at rest, 1 once it has scrolled by its own height); the stylesheet derives
+// every movement from that one number — the sky zooming out, the temple and
+// couple rising, the wording slipping behind them and fading. Keeping the maths
+// in CSS means the browser can composite the whole scene off the main thread.
+const heroScene = document.getElementById("hero");
+
+if (heroScene && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  let queued = false;
+  let last = -1;
+
+  function updateHeroProgress() {
+    queued = false;
+    // Measured against three-quarters of a viewport rather than the hero's own
+    // height. The hero is content-sized below 1200px, so tying the scene's
+    // travel to it would make the whole move fire off in a couple of hundred
+    // pixels of scroll on a phone and drag on for a screenful on a desktop —
+    // a fixed span keeps it feeling the same everywhere.
+    const span = window.innerHeight * 0.75 || 1;
+    // Clamped, so over-scroll on iOS can't push it past either end.
+    const p = Math.min(1, Math.max(0, window.scrollY / span));
+    // Skip the write when the value hasn't moved enough to be visible.
+    if (Math.abs(p - last) < 0.001) return;
+    last = p;
+    heroScene.style.setProperty("--p", p.toFixed(4));
+  }
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(updateHeroProgress);
+    },
+    { passive: true }
+  );
+
+  window.addEventListener("resize", updateHeroProgress, { passive: true });
+  updateHeroProgress();
+}
+
+// Mobile nav. The design's navbar isn't a Bootstrap navbar (translucent cream
+// bar, gold hairline, underlined active item), so the small-screen open/close
+// is a single class toggle here rather than Bootstrap's collapse plugin.
+const siteNav = document.getElementById("siteNav");
+const navToggle = document.getElementById("navToggle");
+
+navToggle?.addEventListener("click", () => {
+  const open = siteNav.classList.toggle("is-open");
+  navToggle.setAttribute("aria-expanded", String(open));
+});
+
+// Tapping a link should close the menu again, since it only scrolls the page.
+document.querySelectorAll(".site-nav__link").forEach((link) => {
+  link.addEventListener("click", () => {
+    siteNav?.classList.remove("is-open");
+    navToggle?.setAttribute("aria-expanded", "false");
+  });
+});
+
+// "Share Our Joy" — the share targets are built at runtime from the page's
+// own URL, so the links keep working on any host (local dev, Netlify preview,
+// the real domain) without a hardcoded address. Instagram has no web share
+// endpoint at all, so that one just opens Instagram and relies on the copied
+// link; its href is left as-is in the markup.
+const SHARE_TEXT = "Arun & Aswathy are getting married on 12th September 2026 — join us!";
+
+document.querySelectorAll(".js-share-link").forEach((link) => {
+  const pageUrl = window.location.href;
+  const encodedUrl = encodeURIComponent(pageUrl);
+
+  if (link.dataset.share === "x") {
+    link.href = `https://x.com/intent/post?text=${encodeURIComponent(SHARE_TEXT)}&url=${encodedUrl}`;
+  } else if (link.dataset.share === "whatsapp") {
+    link.href = `https://wa.me/?text=${encodeURIComponent(`${SHARE_TEXT} ${pageUrl}`)}`;
+  } else if (link.dataset.share === "facebook") {
+    link.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+  }
+});
+
+// Only the label is swapped, not the button's contents — the button also
+// holds the link icon, and writing textContent would delete it.
+const copyLinkBtn = document.getElementById("copyLinkBtn");
+const copyLinkLabel = document.getElementById("copyLinkLabel");
+copyLinkBtn?.addEventListener("click", async () => {
+  const original = copyLinkLabel.textContent;
+  try {
+    await navigator.clipboard.writeText(window.location.href);
+    copyLinkLabel.textContent = "Link Copied";
+  } catch (err) {
+    // Clipboard access is refused on insecure origins and in some browsers
+    // without an explicit permission grant — tell the guest rather than
+    // failing silently.
+    copyLinkLabel.textContent = "Copy failed";
+    console.warn("Could not copy link:", err);
+  }
+  setTimeout(() => {
+    copyLinkLabel.textContent = original;
+  }, 2500);
+});
 
 // Shared music controls — the inline player and floating button both control
 // the same audio element so playback continues while guests browse the page.
@@ -213,41 +289,14 @@ if (weddingSong) {
     updateSongControls();
   });
 
-  function playSong() {
-    if (!weddingSong.paused) return;
-
-    weddingSong.play().then(() => {
-      if (songStatus) songStatus.textContent = "Now playing";
-      updateSongControls();
-    }).catch(() => {
-      if (songStatus) songStatus.textContent = "Tap play to start the song";
-    });
-  }
-
-  // Autoplay gate. Browsers refuse to start audio with sound until the
-  // visitor has interacted with the page, and nothing the page does by
-  // itself counts — so the wishes modal is opened on every load to collect
-  // that interaction. Dismissing it (the × button, clicking the backdrop,
-  // Esc, or the "Enter Site" button) all funnel through hidden.bs.modal,
-  // and each of those is a real user gesture, which is what unlocks
-  // playback. Sending a wish leaves the modal open, so that button starts
-  // the song directly instead.
-  //
-  // The gesture permission a browser grants this way is "sticky": it lasts
-  // for the life of the page, so starting playback after the modal's close
-  // animation finishes is still allowed.
-  const wishesModalEl = document.getElementById("wishesModal");
-  if (wishesModalEl) {
-    bootstrap.Modal.getOrCreateInstance(wishesModalEl).show();
-    wishesModalEl.addEventListener("hidden.bs.modal", playSong);
-    document.getElementById("wishSubmitBtn")?.addEventListener("click", playSong);
-  }
-
-  // Still worth one unprompted attempt: browsers make an exception for
-  // sites the visitor uses often, so for those guests the song starts
-  // immediately rather than waiting for the modal. Silently ignored when
-  // refused, since the modal gate above is the real path.
-  weddingSong.addEventListener("canplay", playSong, { once: true });
+  // Autoplay is deliberately OFF. There used to be an autoplay gate here:
+  // the wishes modal was opened on every load purely to harvest the user
+  // gesture that browsers require before audio may start, and dismissing it
+  // (or sending a wish) kicked off playback, with a fallback `canplay`
+  // attempt for visitors whose browser already trusted the site. All of
+  // that is removed — the song now starts only from the inline player's
+  // play button or the floating one, both wired up above. Re-enabling
+  // autoplay means restoring that gate; nothing else here needs to change.
 }
 
 // "Send Us Wishes" popup posts to our own serverless function, which is what

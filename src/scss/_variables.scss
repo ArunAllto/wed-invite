@@ -60,6 +60,9 @@ $whatsapp:     #25d366;
 $facebook:     #1877f2;
 $instagram:    #e0407b;
 $ivory:        #fdf9f3;
+$brown-body:   #6e625f; // design's paragraph gray-brown
+$brown-ink:    #503e31; // hero meta lines
+$gold-arch:    #eaa930; // 3px border on the arched story photo
 
 $primary:   $maroon;
 $secondary: $forest;
@@ -156,6 +159,7 @@ $font-instrument-sans:  "Instrument Sans", "Segoe UI", Roboto, sans-serif;
 $font-instrument-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
 $font-manrope:          "Manrope", "Segoe UI", Roboto, sans-serif;
 $font-gloock:           "Gloock", Georgia, "Times New Roman", serif;
+$font-montserrat:       "Montserrat", "Segoe UI", Roboto, sans-serif;
 
 // Referenced by the `.font-*` utility loop in _custom.scss — add new custom
 // fonts to both this map and the variables above.
@@ -164,6 +168,7 @@ $font-families: (
   "instrument-serif": $font-instrument-serif,
   "manrope":          $font-manrope,
   "gloock":           $font-gloock,
+  "montserrat":       $font-montserrat,
 );
 
 // Bootstrap's own typography variables, built from the custom fonts above
