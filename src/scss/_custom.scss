@@ -1096,10 +1096,44 @@ img.fig__l {
   opacity: .84;
 }
 
+// The decoration is wrapped so it has something to become a row on a narrow
+// screen. At the artboard's own width it must not affect layout at all, so the
+// wrapper removes itself from the box tree — its children stay absolutely
+// placed against `.countdown-section`, which is the positioned ancestor.
+.countdown-decor { display: contents; }
+
 @media (max-width: 991.98px) {
   .countdown-title { font-size: 2.5rem; }
-  // The medallions crowd the copy once the band narrows.
-  .countdown-section .fig-abs { display: none; }
+
+  // Below lg the artboard coordinates no longer fit: they are pixel positions
+  // on a 1440 canvas, so on a phone the medallions land on top of the heading
+  // and the timer. Rather than dropping them (which is what used to happen),
+  // the wrapper becomes a real flex row and they flow underneath the counter,
+  // wrapping onto as many lines as they need.
+  .countdown-decor {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding-inline: 1.5rem;
+  }
+
+  // Back into normal flow, at a size that suits a thumbnail rather than a
+  // full-bleed decoration. `height: auto` lets each keep its own aspect ratio
+  // instead of the design's fixed `--h`.
+  .countdown-section .fig-abs {
+    position: static;
+    inset: auto;
+    width: clamp(64px, 21vw, 108px);
+    height: auto;
+    transform: none;
+  }
+
+  // The bloom is a blurred light effect that only reads when it sits behind
+  // the medallions at their design coordinates; in a row of thumbnails it is
+  // just a smudge.
+  .countdown-section .countdown-glow { display: none; }
 }
 
 // ── Our Story ─────────────────────────────────────────────────────────────
@@ -1191,7 +1225,7 @@ img.fig__l {
 .song-slot {
   position: absolute;
   left: -6.35%;
-  top: -8.13%;
+  top: -6.13%;
   width: clamp(240px, 44.94%, 262px);
   container-type: inline-size;
   z-index: 2;
@@ -1247,6 +1281,24 @@ img.fig__l {
   // that overhang would sit under the section's left gutter, so the row gets
   // enough top room for the card and the wrap is nudged clear of the edge.
   .story-figure-wrap { margin-top: 2.5rem; }
+
+  // Song card, once the columns stack.
+  //
+  // Its design placement is a negative percentage of the photo's width, which
+  // only makes sense while the photo is one of two columns with a page margin
+  // beside it. Full-width, that overhang has nothing to hang off: it resolved
+  // to -46px at tablet widths and pushed the card outside the section, where
+  // `overflow: hidden` clipped its left edge off entirely. A flat 20px inset
+  // pins it just inside the photo instead, at every width.
+  //
+  // Shrinking is a one-liner because the card sizes everything inside itself
+  // from this slot's width (`font-size: calc(100cqw / 262)`), so narrowing the
+  // slot scales the artwork, type and controls together.
+  .song-slot {
+    left: 10px;
+    top: -60px;
+    width: clamp(180px, 52vw, 220px);
+  }
 }
 
 // ── Shared section header ─────────────────────────────────────────────────
