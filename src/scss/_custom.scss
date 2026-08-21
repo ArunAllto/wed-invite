@@ -985,12 +985,18 @@ img.fig__l {
   overflow: hidden;
 }
 
+// `--ref` is how many design units the container spans, and `--ox`/`--oy`
+// shift the origin. The defaults reproduce the full 1440 artboard, so a plain
+// `.fig-abs` behaves exactly as before. Overriding the three on a wrapper
+// re-frames a *subset* of the artboard as its own little canvas — which is how
+// a cluster of layers keeps its collage arrangement while being relocated as
+// one piece (see .countdown-decor).
 .fig-abs {
   position: absolute;
-  left: calc(var(--l) * 100cqw / 1440);
-  top: calc(var(--t) * 100cqw / 1440);
-  width: calc(var(--w) * 100cqw / 1440);
-  height: calc(var(--h) * 100cqw / 1440);
+  left: calc((var(--l) - var(--ox, 0)) * 100cqw / var(--ref, 1440));
+  top: calc((var(--t) - var(--oy, 0)) * 100cqw / var(--ref, 1440));
+  width: calc(var(--w) * 100cqw / var(--ref, 1440));
+  height: calc(var(--h) * 100cqw / var(--ref, 1440));
   pointer-events: none;
   transform: scaleX(var(--flip, 1));
 }
@@ -1096,44 +1102,56 @@ img.fig__l {
   opacity: .84;
 }
 
-// The decoration is wrapped so it has something to become a row on a narrow
-// screen. At the artboard's own width it must not affect layout at all, so the
-// wrapper removes itself from the box tree — its children stay absolutely
-// placed against `.countdown-section`, which is the positioned ancestor.
+// The decoration is split into the design's two clusters so each can be
+// relocated as one piece. At the artboard's own width neither must affect
+// layout, so the wrappers remove themselves from the box tree — their children
+// stay absolutely placed against `.countdown-section`, the positioned
+// ancestor, exactly as they were when they were its direct children.
+//
+// `--ox`/`--oy`/`--ref` are deliberately NOT set here: custom properties
+// inherit straight through `display: contents`, so setting them would reach
+// the children on desktop too and shift the whole composition.
 .countdown-decor { display: contents; }
 
 @media (max-width: 991.98px) {
   .countdown-title { font-size: 2.5rem; }
 
-  // Below lg the artboard coordinates no longer fit: they are pixel positions
-  // on a 1440 canvas, so on a phone the medallions land on top of the heading
-  // and the timer. Rather than dropping them (which is what used to happen),
-  // the wrapper becomes a real flex row and they flow underneath the counter,
-  // wrapping onto as many lines as they need.
+  // Below lg the artboard coordinates stop fitting — they are positions on a
+  // 1440 canvas, so the medallions land on top of the heading and the counter.
+  //
+  // Each cluster becomes its own miniature artboard instead: `--ref` is the
+  // cluster's own width in design units and `--ox`/`--oy` move the origin to
+  // its top-left corner, so the layers inside keep the exact overlapping
+  // arrangement the design gives them, scaled to whatever width the cluster
+  // gets. One goes above the counter, the other below.
   .countdown-decor {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    padding-inline: 1.5rem;
+    // Back to being a real box — `display: contents` leaves no box for
+    // `position`, `container-type` or `width` to apply to.
+    display: block;
+    position: relative;
+    container-type: inline-size;
+    // Fills the width inside the section's 24px page gutter, up to a cap that
+    // stops it looking marooned in the middle of a tablet.
+    width: min(100% - 3rem, 420px);
+    margin-inline: auto;
   }
 
-  // Back into normal flow, at a size that suits a thumbnail rather than a
-  // full-bleed decoration. `height: auto` lets each keep its own aspect ratio
-  // instead of the design's fixed `--h`.
-  .countdown-section .fig-abs {
-    position: static;
-    inset: auto;
-    width: clamp(64px, 21vw, 108px);
-    height: auto;
-    transform: none;
+  // Extents measured from the layers themselves: x 29 -> 449.37,
+  // y 12 -> 398.2 for the left cluster.
+  .countdown-decor--top {
+    --ox: 29;
+    --oy: 12;
+    --ref: 420.37;
+    aspect-ratio: 420.37 / 386.2;
   }
 
-  // The bloom is a blurred light effect that only reads when it sits behind
-  // the medallions at their design coordinates; in a row of thumbnails it is
-  // just a smudge.
-  .countdown-section .countdown-glow { display: none; }
+  // Right cluster: x 1042 -> 1484.51, y -16 -> 481.9.
+  .countdown-decor--bottom {
+    --ox: 1042;
+    --oy: -16;
+    --ref: 442.51;
+    aspect-ratio: 442.51 / 497.9;
+  }
 }
 
 // ── Our Story ─────────────────────────────────────────────────────────────
@@ -1421,7 +1439,7 @@ img.fig__l {
 
 // Four across only works at the artboard's own width; below that the cards
 // fall under the design's 305px and the venue lines start truncating, so they
-// drop to two.
+// drop to two, and stay at two all the way down to the smallest phone.
 @media (max-width: 1199.98px) {
   .events-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -1430,8 +1448,28 @@ img.fig__l {
   .events-section .sec-title { font-size: 2.5rem; }
 }
 
+// Two across all the way down rather than collapsing to one — a single
+// full-width column turned four cards into a very long scroll. The cards get
+// narrow enough on a phone that the meta rows need to give up some size, or
+// the venue lines are almost entirely ellipsis.
 @media (max-width: 575.98px) {
-  .events-grid { grid-template-columns: 1fr; }
+  .events-grid { gap: 12px; }
+  .event-card { padding: 8px; }
+  .event-card__details { gap: .5rem; padding: 0 4px 4px; }
+  .event-card__title { font-size: 1.125rem; } // 18px
+  // The rows are single-line-with-ellipsis at the design's card width, which
+  // at half a phone's width threw away most of the venue name ("Bride's
+  // Residence, Poovarany" lost 79px of itself). Wrapping keeps the whole
+  // address; the icon moves to the top so it sits against the first line
+  // rather than floating in the middle of a two-line block.
+  .event-card__row {
+    align-items: flex-start;
+    gap: 8px;
+    font-size: .8125rem; // 13px
+
+    img { width: 12px; height: 12px; margin-top: 2px; }
+    span { overflow: visible; text-overflow: clip; white-space: normal; }
+  }
 }
 
 // ── Venues ────────────────────────────────────────────────────────────────
@@ -1543,6 +1581,35 @@ img.fig__l {
 @media (max-width: 767.98px) {
   .venues-grid { grid-template-columns: 1fr; }
   .venues-section .sec-title { font-size: 2.75rem; }
+}
+
+// ── Our Moments (gallery) ─────────────────────────────────────────────────
+// Masonry, via CSS multi-column: the photos are mixed heights and should sit
+// flush under one another rather than on a shared baseline with gaps.
+//
+// This used to be four Bootstrap column divs of six photos each, which fixed
+// the layout at counts that divide into four — three across left the fourth
+// wrapper stranded on its own row with a hole beside it. A single flat list in
+// a multi-column box reflows to any number of columns, so the count is one
+// declaration per breakpoint.
+.gallery-grid {
+  column-count: 2;      // phones
+  column-gap: .25rem;   // matches the 4px the old `g-1` row gutter gave
+
+  // Each photo is one unbreakable block, so no image is split across the
+  // bottom of one column and the top of the next.
+  > button {
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+  }
+}
+
+@media (min-width: 768px) {
+  .gallery-grid { column-count: 3; }  // tablets
+}
+
+@media (min-width: 992px) {
+  .gallery-grid { column-count: 4; }  // the design's own four
 }
 
 // ── Song card ─────────────────────────────────────────────────────────────

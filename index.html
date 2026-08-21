@@ -225,6 +225,18 @@
     <!-- The Big Day — live countdown. 1440x395 band; the photo medallions and
          florals are placed at the design's own pixel coordinates via .fig-abs. -->
     <section id="the-big-day" class="countdown-section fig-band">
+      <!-- The design's left-hand cluster. On the artboard it sits at its Figma
+           coordinates like everything else; below lg the wrapper re-frames just
+           this corner of the artboard as its own canvas, so the collage keeps
+           its arrangement while moving above the counter. -->
+      <div class="countdown-decor countdown-decor--top">
+        <img class="fig-abs cd--medallion-a" src="/images/figma/cd-medallion-a.webp" alt="" />
+        <img class="fig-abs cd--medallion-b" src="/images/figma/cd-medallion-b.webp" alt="" />
+        <img class="fig-abs cd--flower-a" src="/images/figma/cd-flower-a.webp" alt="" />
+        <img class="fig-abs cd--flower-b" src="/images/figma/cd-flower-b.webp" alt="" />
+        <img class="fig-abs cd--leaf" src="/images/figma/cd-leaf.webp" alt="" />
+      </div>
+
       <div class="countdown-header">
         <h2 class="countdown-title">The Big Day</h2>
         <p class="countdown-tagline">— Counting down to our forever —</p>
@@ -249,18 +261,11 @@
         </div>
       </div>
 
-      <!-- Decorative photo medallions and florals. On the artboard these bleed
-           off both edges at their design coordinates; below lg the wrapper
-           turns into a wrapping row so they stay on the page instead of
-           overlapping the copy (see .countdown-decor in _custom.scss). -->
-      <div class="countdown-decor">
-        <img class="fig-abs cd--medallion-a" src="/images/figma/cd-medallion-a.webp" alt="" />
-        <img class="fig-abs cd--medallion-b" src="/images/figma/cd-medallion-b.webp" alt="" />
+      <!-- The design's right-hand cluster, which moves below the counter on
+           small screens the same way. -->
+      <div class="countdown-decor countdown-decor--bottom">
         <img class="fig-abs cd--photo-round" src="/images/figma/cd-photo-round.webp" alt="" />
         <img class="fig-abs cd--medallion-c" src="/images/figma/cd-medallion-c.webp" alt="" />
-        <img class="fig-abs cd--flower-a" src="/images/figma/cd-flower-a.webp" alt="" />
-        <img class="fig-abs cd--flower-b" src="/images/figma/cd-flower-b.webp" alt="" />
-        <img class="fig-abs cd--leaf" src="/images/figma/cd-leaf.webp" alt="" />
         <img class="fig-abs countdown-glow" src="/images/figma/cd-glow.webp" alt="" />
       </div>
     </section>
@@ -382,87 +387,79 @@
             <h2 class="font-gloock text-success mb-0">Our Moments</h2>
           </div>
         </div>
-        <div class="row g-1">
-          <div class="col-12 col-md-6 col-lg-3">
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="0">
-              <img class="img-fluid rounded-2" alt="Moment 1" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%237a1f3d'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="1">
-              <img class="img-fluid rounded-2" alt="Moment 2" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect width='400' height='500' fill='%231b4332'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="2">
-              <img class="img-fluid rounded-2" alt="Moment 3" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='260'%3E%3Crect width='400' height='260' fill='%23c9a227'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="3">
-              <img class="img-fluid rounded-2" alt="Moment 4" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%233f7d58'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="4">
-              <img class="img-fluid rounded-2" alt="Moment 5" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='550'%3E%3Crect width='400' height='550' fill='%23d98a96'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="5">
-              <img class="img-fluid rounded-2" alt="Moment 6" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='340'%3E%3Crect width='400' height='340' fill='%23b3261e'/%3E%3C/svg%3E" />
-            </button>
-          </div>
-          <div class="col-12 col-md-6 col-lg-3">
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="6">
-              <img class="img-fluid rounded-2" alt="Moment 7" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%235a4c38'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="7">
-              <img class="img-fluid rounded-2" alt="Moment 8" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='260'%3E%3Crect width='400' height='260' fill='%23a6916d'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="8">
-              <img class="img-fluid rounded-2" alt="Moment 9" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='550'%3E%3Crect width='400' height='550' fill='%237a1f3d'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="9">
-              <img class="img-fluid rounded-2" alt="Moment 10" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%231b4332'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="10">
-              <img class="img-fluid rounded-2" alt="Moment 11" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%23c9a227'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="11">
-              <img class="img-fluid rounded-2" alt="Moment 12" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect width='400' height='500' fill='%233f7d58'/%3E%3C/svg%3E" />
-            </button>
-          </div>
-          <div class="col-12 col-md-6 col-lg-3">
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="12">
-              <img class="img-fluid rounded-2" alt="Moment 13" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='260'%3E%3Crect width='400' height='260' fill='%23d98a96'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="13">
-              <img class="img-fluid rounded-2" alt="Moment 14" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%23b3261e'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="14">
-              <img class="img-fluid rounded-2" alt="Moment 15" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%235a4c38'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="15">
-              <img class="img-fluid rounded-2" alt="Moment 16" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='550'%3E%3Crect width='400' height='550' fill='%23a6916d'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="16">
-              <img class="img-fluid rounded-2" alt="Moment 17" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='340'%3E%3Crect width='400' height='340' fill='%237a1f3d'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="17">
-              <img class="img-fluid rounded-2" alt="Moment 18" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%231b4332'/%3E%3C/svg%3E" />
-            </button>
-          </div>
-          <div class="col-12 col-md-6 col-lg-3">
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="18">
-              <img class="img-fluid rounded-2" alt="Moment 19" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect width='400' height='500' fill='%23c9a227'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="19">
-              <img class="img-fluid rounded-2" alt="Moment 20" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='340'%3E%3Crect width='400' height='340' fill='%233f7d58'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="20">
-              <img class="img-fluid rounded-2" alt="Moment 21" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%23d98a96'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="21">
-              <img class="img-fluid rounded-2" alt="Moment 22" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='260'%3E%3Crect width='400' height='260' fill='%23b3261e'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="22">
-              <img class="img-fluid rounded-2" alt="Moment 23" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%235a4c38'/%3E%3C/svg%3E" />
-            </button>
-            <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="23">
-              <img class="img-fluid rounded-2" alt="Moment 24" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='550'%3E%3Crect width='400' height='550' fill='%23a6916d'/%3E%3C/svg%3E" />
-            </button>
-          </div>
+        <div class="gallery-grid">
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="0">
+            <img class="img-fluid rounded-2" alt="Moment 1" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%237a1f3d'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="1">
+            <img class="img-fluid rounded-2" alt="Moment 2" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect width='400' height='500' fill='%231b4332'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="2">
+            <img class="img-fluid rounded-2" alt="Moment 3" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='260'%3E%3Crect width='400' height='260' fill='%23c9a227'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="3">
+            <img class="img-fluid rounded-2" alt="Moment 4" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%233f7d58'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="4">
+            <img class="img-fluid rounded-2" alt="Moment 5" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='550'%3E%3Crect width='400' height='550' fill='%23d98a96'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="5">
+            <img class="img-fluid rounded-2" alt="Moment 6" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='340'%3E%3Crect width='400' height='340' fill='%23b3261e'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="6">
+            <img class="img-fluid rounded-2" alt="Moment 7" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%235a4c38'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="7">
+            <img class="img-fluid rounded-2" alt="Moment 8" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='260'%3E%3Crect width='400' height='260' fill='%23a6916d'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="8">
+            <img class="img-fluid rounded-2" alt="Moment 9" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='550'%3E%3Crect width='400' height='550' fill='%237a1f3d'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="9">
+            <img class="img-fluid rounded-2" alt="Moment 10" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%231b4332'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="10">
+            <img class="img-fluid rounded-2" alt="Moment 11" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%23c9a227'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="11">
+            <img class="img-fluid rounded-2" alt="Moment 12" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect width='400' height='500' fill='%233f7d58'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="12">
+            <img class="img-fluid rounded-2" alt="Moment 13" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='260'%3E%3Crect width='400' height='260' fill='%23d98a96'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="13">
+            <img class="img-fluid rounded-2" alt="Moment 14" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%23b3261e'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="14">
+            <img class="img-fluid rounded-2" alt="Moment 15" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%235a4c38'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="15">
+            <img class="img-fluid rounded-2" alt="Moment 16" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='550'%3E%3Crect width='400' height='550' fill='%23a6916d'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="16">
+            <img class="img-fluid rounded-2" alt="Moment 17" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='340'%3E%3Crect width='400' height='340' fill='%237a1f3d'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="17">
+            <img class="img-fluid rounded-2" alt="Moment 18" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%231b4332'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="18">
+            <img class="img-fluid rounded-2" alt="Moment 19" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect width='400' height='500' fill='%23c9a227'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="19">
+            <img class="img-fluid rounded-2" alt="Moment 20" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='340'%3E%3Crect width='400' height='340' fill='%233f7d58'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="20">
+            <img class="img-fluid rounded-2" alt="Moment 21" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%23d98a96'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="21">
+            <img class="img-fluid rounded-2" alt="Moment 22" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='260'%3E%3Crect width='400' height='260' fill='%23b3261e'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="22">
+            <img class="img-fluid rounded-2" alt="Moment 23" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%235a4c38'/%3E%3C/svg%3E" />
+          </button>
+          <button type="button" class="d-block w-100 p-0 border-0 bg-transparent mb-1" data-bs-toggle="modal" data-bs-target="#galleryModal" data-gallery-index="23">
+            <img class="img-fluid rounded-2" alt="Moment 24" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='550'%3E%3Crect width='400' height='550' fill='%23a6916d'/%3E%3C/svg%3E" />
+          </button>
         </div>
       </div>
     </section>
