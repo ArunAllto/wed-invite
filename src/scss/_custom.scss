@@ -282,6 +282,19 @@
   padding: 1rem 5rem; // 16px / 80px
 }
 
+// A sticky bar with a backdrop-filter has to re-blur whatever is passing
+// underneath it on every single scroll frame, which is one of the more
+// reliable ways to make a phone stutter — and the artwork sliding beneath this
+// one is exactly the expensive case. At 90% opacity over a busy hero the blur
+// was barely legible anyway, so small screens get an opaque bar instead and
+// pay nothing.
+@media (max-width: 991.98px) {
+  .site-nav {
+    background: $ivory;
+    backdrop-filter: none;
+  }
+}
+
 .site-nav__inner {
   display: flex;
   align-items: center;
@@ -385,6 +398,40 @@
   .site-nav__inner { flex-wrap: wrap; }
   .site-nav.is-open .site-nav__links { display: flex; }
   .site-nav__cta { order: 2; }
+}
+
+// ── Animated custom properties ────────────────────────────────────────────
+// Registering the four properties the scroll scene animates. Unregistered
+// custom properties are stored as raw token strings, so every write re-parses
+// and re-substitutes them through the whole subtree that might read them; a
+// registered one is a typed value the engine can handle directly.
+//
+// `inherits: false` on the per-layer offsets matters most. They are always set
+// and read on the same element, so cascading them was pure waste — and it was
+// also the trap behind the group-offset bug: a wrapper's `--py` inherited into
+// its children, where `.fig__l` applied it a second time.
+@property --p {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --q {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --py {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --gy {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0px;
 }
 
 // ── Figma artboard stage ──────────────────────────────────────────────────
@@ -633,6 +680,20 @@ img.fig__l {
   // filter: blur(9.15em);
   mix-blend-mode: screen;
   pointer-events: none;
+}
+
+// A blend mode forces the element to be composited against its backdrop,
+// which costs the GPU fast path for the whole stacking context it sits in —
+// and these blooms sit inside stages that are transformed on every scroll
+// frame, so the surface has to be recombined continuously. The flare bitmaps
+// carry their own alpha (see the note above), so the blend only adds a little
+// warmth on top; small screens give that up and scroll cleanly instead.
+@media (max-width: 991.98px) {
+  .fig-glow,
+  .countdown-glow,
+  .story-figure__glow {
+    mix-blend-mode: screen;
+  }
 }
 
 // The wording lives outside the artboard so it keeps a readable size at every
@@ -1820,6 +1881,11 @@ $petal-aspect: 0.767; // 56 / 73 — the source image's height:width ratio, kept
   animation-name: petal-fall;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
+  // Promotes each petal to its own compositor layer so the fall runs off the
+  // main thread. Without this the animation was being ticked in style recalc
+  // on every frame, which measured as a quarter of the page's whole scroll
+  // cost even though it only animates transform and opacity.
+  will-change: transform, opacity;
 }
 
 @keyframes petal-fall {
@@ -1841,6 +1907,13 @@ $petal-aspect: 0.767; // 56 / 73 — the source image's height:width ratio, kept
     animation-delay: -($i * 1.2s);
     --petal-drift: #{(if(random(2) == 1, 1, -1)) * (random(40) + 20)}px;
   }
+}
+
+// Half as many on a phone. Each petal is now its own compositor layer, and
+// twenty of those is real GPU memory on a small device for something that
+// reads the same with ten. The oversized flower is #10, so it survives.
+@media (max-width: 575.98px) {
+  .petal:nth-of-type(n + 11) { display: none; }
 }
 
 // Respect the user's OS-level motion preference, matching this project's
