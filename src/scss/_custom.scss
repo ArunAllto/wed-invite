@@ -495,7 +495,7 @@ img.fig__l {
   // the very end, so the composed picture is on screen for a beat before the
   // hero leaves. `--q` is that eased-forward progress; the text fade still
   // tracks raw `--p`, since it needs to be gone earlier than that.
-  --q: clamp(0, calc(var(--p) / .75), 1);
+  --q: clamp(0, calc(var(--p) / 1.5), 1);
   container-type: inline-size;
   // From `lg` up, the hero *is* the artboard: it takes the artboard's own
   // 1440x800 proportion, so the whole composition renders at the design's
@@ -893,11 +893,11 @@ img.fig__l {
   // Only the four layers being recomposed are restated; the `lg`-and-up
   // coordinates above still drive every other layer, and still drive these
   // four on wide screens, where the Figma placement applies.
-  .hl--gopuram { --l: 275; --t: -331;  --w: 1200; --h: 1341; }
-  .hl--peacock { --l: 180; --t: 391; --w: 400;  --h: 429; }
-  .hl--couple  { --l: 370; --t: 44; --w: 800;  --h: 876; }
+  .hl--gopuram { --l: 275; --t: -901;  --w: 1200; --h: 1341; }
+  .hl--peacock { --l: 180; --t: -269; --w: 700;  --h: 769; }
+  .hl--couple  { --l: 240; --t: -376; --w: 1030;  --h: 1156; }
   // filter: blur(9.15em);
-  .hl--glow    { --l: 520; --t: 120; --w: 520;  --h: 446; filter: blur(9em); }
+  .hl--glow    { --l: 520; --t: -650; --w: 630;  --h: 616; filter: blur(9em); }
 }
 
 // ── Quote banner ──────────────────────────────────────────────────────────
